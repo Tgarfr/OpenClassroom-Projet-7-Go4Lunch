@@ -3,7 +3,7 @@ package com.startup.go4lunch.api;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.startup.go4lunch.api.FakeRestaurantList;
+import com.startup.go4lunch.api.utilApi.FakeRestaurantList;
 import com.startup.go4lunch.model.Restaurant;
 
 import java.util.List;

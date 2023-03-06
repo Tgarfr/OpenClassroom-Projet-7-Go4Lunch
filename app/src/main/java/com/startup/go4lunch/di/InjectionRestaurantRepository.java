@@ -9,7 +9,7 @@ public class InjectionRestaurantRepository {
     private static RestaurantRepository INSTANCE;
 
     private static RestaurantRepository createRestaurantRepository() {
-        return new RestaurantRepository(new FakeRestaurantApi());
+        return new RestaurantRepository(new OverpassRestaurantApi());
     }
 
     public static RestaurantRepository getRestaurantRepository() {
