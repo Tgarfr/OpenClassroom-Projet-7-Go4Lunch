@@ -18,15 +18,12 @@ import java.util.List;
 
 public class RestaurantListAdapter extends ListAdapter<Restaurant, RestaurantListAdapter.ViewHolder> {
 
-    private List<Restaurant> restaurantList;
-
     protected RestaurantListAdapter(@NonNull DiffUtil.ItemCallback<Restaurant> diffCallback) {
         super(diffCallback);
     }
 
     @Override
     public void submitList(@Nullable List<Restaurant> list) {
-        this.restaurantList = list;
         super.submitList(list);
     }
 
@@ -40,12 +37,12 @@ public class RestaurantListAdapter extends ListAdapter<Restaurant, RestaurantLis
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.restaurantName.setText(restaurantList.get(position).getName());
-        holder.restaurantAdress.setText(restaurantList.get(position).getAddress());
-        holder.restaurantOpeningTime.setText(restaurantList.get(position).getOpeningTime());
+        holder.restaurantName.setText(getCurrentList().get(position).getName());
+        holder.restaurantAdress.setText(getCurrentList().get(position).getAddress());
+        holder.restaurantOpeningTime.setText(getCurrentList().get(position).getOpeningTime());
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView restaurantName;
         public TextView restaurantAdress;

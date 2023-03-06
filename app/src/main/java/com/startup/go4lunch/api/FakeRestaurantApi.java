@@ -1,18 +1,22 @@
 package com.startup.go4lunch.api;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
+import com.startup.go4lunch.api.FakeRestaurantList;
 import com.startup.go4lunch.model.Restaurant;
 
 import java.util.List;
 
 public class FakeRestaurantApi implements RestaurantApi {
 
-    private List<Restaurant> restaurantList;
+    private final MutableLiveData<List<Restaurant>> restaurantListLiveData = new MutableLiveData<>();
 
     public FakeRestaurantApi() {
-        restaurantList = FakeRestaurantList.getFakeRestaurantList();
+        restaurantListLiveData.setValue(FakeRestaurantList.getFakeRestaurantListLiveData());
     }
 
-    public List<Restaurant> getRestaurantList() {
-        return restaurantList;
+    public LiveData<List<Restaurant>> getRestaurantListLiveData() {
+        return restaurantListLiveData;
     }
 }
