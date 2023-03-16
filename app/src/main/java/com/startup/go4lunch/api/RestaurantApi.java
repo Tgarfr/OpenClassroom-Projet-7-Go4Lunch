@@ -1,6 +1,9 @@
 package com.startup.go4lunch.api;
 
-import androidx.lifecycle.LiveData;
+import android.location.Location;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 
 import com.startup.go4lunch.model.Restaurant;
 
@@ -8,5 +11,5 @@ import java.util.List;
 
 public interface RestaurantApi {
 
-    LiveData<List<Restaurant>> getRestaurantListLiveData();
+    MutableLiveData<List<Restaurant>> getRestaurantListLiveData(@NonNull Location location);
 }

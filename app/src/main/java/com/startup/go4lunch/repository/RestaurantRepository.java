@@ -1,6 +1,10 @@
 package com.startup.go4lunch.repository;
 
+import android.location.Location;
+
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.startup.go4lunch.api.RestaurantApi;
 import com.startup.go4lunch.model.Restaurant;
@@ -9,13 +13,18 @@ import java.util.List;
 
 public class RestaurantRepository {
 
-    private LiveData<List<Restaurant>> restaurantList;
+    private MutableLiveData<List<Restaurant>> restaurantListLivedata;
+    private final RestaurantApi restaurantApi;
 
-    public RestaurantRepository(RestaurantApi apiService) {
-        this.restaurantList = apiService.getRestaurantListLiveData();
+    public RestaurantRepository(@NonNull RestaurantApi restaurantApi) {
+        this.restaurantApi = restaurantApi;
     }
 
     public LiveData<List<Restaurant>> getRestaurantListLiveData() {
-        return restaurantList;
+        return restaurantListLivedata;
+    }
+
+    public void updateLocationRestaurantList(@NonNull Location location) {
+        restaurantListLivedata = restaurantApi.getRestaurantListLiveData(location);
     }
 }

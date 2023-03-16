@@ -3,21 +3,20 @@ package com.startup.go4lunch.di;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.startup.go4lunch.repository.LocationRepository;
 import com.startup.go4lunch.repository.RestaurantRepository;
+import com.startup.go4lunch.ui.MainActivityViewModel;
 import com.startup.go4lunch.ui.RestaurantListFragmentViewModel;
-
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
 
     private static ViewModelFactory factory;
     private final RestaurantRepository restaurantRepository;
-    private final Executor executor;
+    private final LocationRepository locationRepository;
 
     private ViewModelFactory() {
-        this.restaurantRepository = InjectionRestaurantRepository.getRestaurantRepository();
-        this.executor = Executors.newSingleThreadExecutor();
+        this.restaurantRepository = Injection.getRestaurantRepository();
+        this.locationRepository = new LocationRepository();
     }
 
     public static ViewModelFactory getInstance() {
@@ -35,7 +34,10 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     @Override
     public <T extends androidx.lifecycle.ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(RestaurantListFragmentViewModel.class)) {
-            return (T) new RestaurantListFragmentViewModel(restaurantRepository, executor);
+            return (T) new RestaurantListFragmentViewModel(restaurantRepository,locationRepository);
+        }
+        if (modelClass.isAssignableFrom(MainActivityViewModel.class)) {
+            return (T) new MainActivityViewModel(restaurantRepository,locationRepository);
         }
         throw new IllegalArgumentException("Unknown ViewModel class");
     }

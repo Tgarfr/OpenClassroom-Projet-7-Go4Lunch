@@ -1,85 +1,76 @@
 package com.startup.go4lunch.api;
 
-import android.util.Log;
+import android.location.Location;
 
-import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
-import com.startup.go4lunch.api.utilApi.OverpassCalls;
-import com.startup.go4lunch.api.utilApi.OverpassElements;
-import com.startup.go4lunch.api.utilApi.OverpassGsonObject;
+import com.startup.go4lunch.model.OverpassElements;
+import com.startup.go4lunch.model.OverpassGsonObject;
 import com.startup.go4lunch.model.Restaurant;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class OverpassRestaurantApi implements RestaurantApi, OverpassCalls.Callback {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+public class OverpassRestaurantApi implements RestaurantApi, Callback<OverpassGsonObject> {
 
     MutableLiveData<List<Restaurant>> restaurantListLiveData = new MutableLiveData<>();
 
-    public OverpassRestaurantApi() {
-        OverpassCalls.fetchRestaurantList(this);
-    }
-
-
-    @Override
-    public LiveData<List<Restaurant>> getRestaurantListLiveData() {
-        return this.restaurantListLiveData;
-    }
+    public static Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl("https://overpass-api.de/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
 
     @Override
-    public void onResponse(@Nullable OverpassGsonObject overpassGsonObject) {
-        if (overpassGsonObject != null) {
-            this.restaurantListLiveData.setValue(overpassGsonObjectToRestaurantList(overpassGsonObject));
+    public MutableLiveData<List<Restaurant>> getRestaurantListLiveData() {
+        return restaurantListLiveData;
+    }
+
+    @Override
+    public void setLocation(@NonNull Location location) {
+        fetchRestaurantList(location);
+    }
+
+    @Override
+    public void onResponse(@NonNull Call<OverpassGsonObject> call, Response<OverpassGsonObject> response) {
+        if (response.body() != null) {
+            this.restaurantListLiveData.setValue(overpassGsonObjectToRestaurantList(response.body()));
         }
     }
 
     @Override
-    public void onFailure() {
+    public void onFailure(@NonNull Call<OverpassGsonObject> call, @NonNull Throwable throwable) {
 
     }
 
+    private void fetchRestaurantList(@NonNull Location location) {
+        OverpassService overpassService = retrofit.create(OverpassService.class);
+        final String overpassSetting = "[out:json][timeout:100];nwr['amenity'='restaurant']("+ generateLocationZoneString(location)+");out body;";
+        Call<OverpassGsonObject> call = overpassService.getRestaurantList(overpassSetting);
+        call.enqueue(this);
+    }
+
+    private static String generateLocationZoneString(@NonNull Location location) {
+        String lowLatitude = String.valueOf(location.getLatitude()-.02);
+        String highLatitude = String.valueOf(location.getLatitude()+.02);
+        String lowLongitude = String.valueOf(location.getLongitude()-.02);
+        String highLongitude = String.valueOf(location.getLongitude()+.02);
+        return lowLatitude+','+lowLongitude+','+highLatitude+','+highLongitude;
+    }
+
     private List<Restaurant> overpassGsonObjectToRestaurantList(OverpassGsonObject overpassGsonObject) {
-
-        List<Restaurant> restaurantList = new ArrayList<>();
         List<OverpassElements> overpassElementslist = overpassGsonObject.getOverpassElementslist();
-
-        for (int i=0;i<overpassElementslist.size();i++) {
-            OverpassElements overpassElements = overpassElementslist.get(i);
-
-            if (overpassElements.getTags().getName() != null) {
-                long id = overpassElements.getId();
-                String name = overpassElements.getTags().getName();
-                String type = overpassElements.getTags().getCuisine();
-                float latitude = overpassElements.getLat();
-                float longitude = overpassElements.getLon();
-
-                String address = null;
-                if (overpassElements.getTags().getHouseNumber() != null) {
-                    address = overpassElements.getTags().getHouseNumber()+" ";
-                }
-                if (overpassElements.getTags().getStreet() != null) {
-                    address = address + overpassElements.getTags().getStreet()+" ";
-                }
-                if (overpassElements.getTags().getPostCode() != null) {
-                    address = address + overpassElements.getTags().getPostCode()+" ";
-                }
-                if (overpassElements.getTags().getCity() != null) {
-                    address = address + overpassElements.getTags().getCity();
-                }
-                if (address == null) {
-                    address = "Address not provided";
-                }
-
-                String openingTime = null;
-                if (overpassElements.getTags().getOpeningHours() != null) {
-                    openingTime = overpassElements.getTags().getOpeningHours();
-                } else {
-                    openingTime = "Opening time not provided";
-                }
-
-                restaurantList.add(new Restaurant(id, name, type, latitude, longitude, address, openingTime));
+        List<Restaurant> restaurantList = new ArrayList<>();
+        for (OverpassElements overpassElements : overpassElementslist) {
+            Restaurant restaurant = Restaurant.from(overpassElements);
+            if (restaurant != null) {
+                restaurantList.add(restaurant);
             }
         }
         return restaurantList;

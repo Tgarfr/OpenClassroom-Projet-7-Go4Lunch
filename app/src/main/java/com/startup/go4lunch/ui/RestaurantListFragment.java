@@ -32,7 +32,7 @@ public class RestaurantListFragment extends Fragment {
 
         RestaurantListFragmentViewModel viewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(RestaurantListFragmentViewModel.class);
         LiveData<List<Restaurant>> restaurantListLiveData = viewModel.getRestaurantListLiveData();
-        restaurantListLiveData.observe(getViewLifecycleOwner(), observerRestaurantList);
+        restaurantListLiveData.observe(getViewLifecycleOwner(), restaurantListObserver);
 
         restaurantListAdapter = new RestaurantListAdapter(DIFF_CALLBACK);
         restaurantListAdapter.submitList(restaurantListLiveData.getValue());
@@ -53,11 +53,16 @@ public class RestaurantListFragment extends Fragment {
 
                 @Override
                 public boolean areContentsTheSame(@NonNull Restaurant oldItem, @NonNull Restaurant newItem) {
-                    return oldItem.getId().equals(newItem.getId());
+                    return oldItem.getName().equals(newItem.getName()) &
+                            oldItem.getAddress().equals(newItem.getAddress()) &
+                            oldItem.getType().equals(newItem.getType()) &
+                            oldItem.getOpeningTime().equals(newItem.getOpeningTime()) &
+                            oldItem.getLatitude() == newItem.getLatitude() &
+                            oldItem.getLongitude() == newItem.getLongitude();
                 }
             };
 
-    private final Observer<List<Restaurant>> observerRestaurantList = new Observer<List<Restaurant>>() {
+    private final Observer<List<Restaurant>> restaurantListObserver = new Observer<List<Restaurant>>() {
         @Override
         public void onChanged(List<Restaurant> restaurantListNew) {
             restaurantListAdapter.submitList(restaurantListNew);

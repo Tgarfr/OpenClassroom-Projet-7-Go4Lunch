@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,17 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.startup.go4lunch.R;
 import com.startup.go4lunch.model.Restaurant;
 
-import java.util.List;
-
 public class RestaurantListAdapter extends ListAdapter<Restaurant, RestaurantListAdapter.ViewHolder> {
 
     protected RestaurantListAdapter(@NonNull DiffUtil.ItemCallback<Restaurant> diffCallback) {
         super(diffCallback);
-    }
-
-    @Override
-    public void submitList(@Nullable List<Restaurant> list) {
-        super.submitList(list);
     }
 
     @NonNull
@@ -37,9 +29,10 @@ public class RestaurantListAdapter extends ListAdapter<Restaurant, RestaurantLis
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.restaurantName.setText(getCurrentList().get(position).getName());
-        holder.restaurantAdress.setText(getCurrentList().get(position).getAddress());
-        holder.restaurantOpeningTime.setText(getCurrentList().get(position).getOpeningTime());
+        Restaurant restaurant = getCurrentList().get(position);
+        holder.restaurantName.setText(restaurant.getName());
+        holder.restaurantAdress.setText(restaurant.getAddress());
+        holder.restaurantOpeningTime.setText(restaurant.getOpeningTime());
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

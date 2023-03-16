@@ -1,4 +1,4 @@
-package com.startup.go4lunch.api.utilApi;
+package com.startup.go4lunch.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
