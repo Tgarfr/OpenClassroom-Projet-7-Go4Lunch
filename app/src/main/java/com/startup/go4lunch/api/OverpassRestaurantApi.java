@@ -22,7 +22,7 @@ public class OverpassRestaurantApi implements RestaurantApi, Callback<OverpassGs
 
     MutableLiveData<List<Restaurant>> restaurantListLiveData = new MutableLiveData<>();
 
-    public static Retrofit retrofit = new Retrofit.Builder()
+    private final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://overpass-api.de/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
@@ -33,7 +33,7 @@ public class OverpassRestaurantApi implements RestaurantApi, Callback<OverpassGs
     }
 
     @Override
-    public void setLocation(@NonNull Location location) {
+    public void fetchLocationNearLocation(@NonNull Location location) {
         fetchRestaurantList(location);
     }
 
