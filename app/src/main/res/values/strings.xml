@@ -5,4 +5,5 @@
     <string name="tab_map">Map View</string>
     <string name="tab_restaurant">List View</string>
     <string name="tab_workmate">Workmates</string>
+    <string name="open_street_map">Open Street Map</string>
 </resources>

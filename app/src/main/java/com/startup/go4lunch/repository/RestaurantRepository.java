@@ -21,10 +21,10 @@ public class RestaurantRepository {
     }
 
     public LiveData<List<Restaurant>> getRestaurantListLiveData() {
-        return restaurantListLivedata;
+        return restaurantApi.getRestaurantListLiveData();
     }
 
     public void updateLocationRestaurantList(@NonNull Location location) {
-        restaurantListLivedata = restaurantApi.getRestaurantListLiveData(location);
+        restaurantApi.fetchLocationNearLocation(location);
     }
 }
