@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.startup.go4lunch.repository.LocationRepository;
 import com.startup.go4lunch.repository.RestaurantRepository;
 import com.startup.go4lunch.ui.MainActivityViewModel;
+import com.startup.go4lunch.ui.MapFragmentViewModel;
 import com.startup.go4lunch.ui.RestaurantListFragmentViewModel;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
@@ -38,6 +39,9 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         }
         if (modelClass.isAssignableFrom(MainActivityViewModel.class)) {
             return (T) new MainActivityViewModel(restaurantRepository,locationRepository);
+        }
+        if (modelClass.isAssignableFrom(MapFragmentViewModel.class)) {
+            return (T) new MapFragmentViewModel(locationRepository,restaurantRepository);
         }
         throw new IllegalArgumentException("Unknown ViewModel class");
     }

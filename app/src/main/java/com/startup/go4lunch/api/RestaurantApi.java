@@ -11,5 +11,7 @@ import java.util.List;
 
 public interface RestaurantApi {
 
-    MutableLiveData<List<Restaurant>> getRestaurantListLiveData(@NonNull Location location);
+    MutableLiveData<List<Restaurant>> getRestaurantListLiveData();
+
+    void fetchLocationNearLocation(@NonNull Location location);
 }
