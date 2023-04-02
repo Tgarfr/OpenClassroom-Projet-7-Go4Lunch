@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-    private FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +57,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         viewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(MainActivityViewModel.class);
         firebaseAuth = FirebaseAuth.getInstance();
-        verifyFirebaseUser();
         getCurrentLocation();
         configureViewPager();
         configureToolBar();
@@ -66,12 +64,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         configureNavigationView();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        verifyFirebaseUser();
+    }
+
     private void verifyFirebaseUser() {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser == null) {
             startSignInActivity();
         } else {
-            this.firebaseUser = firebaseUser;
+            updateHeaderLayoutWithUserData();
         }
     }
 
@@ -90,8 +94,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void onSignInResult(FirebaseAuthUIAuthenticationResult result) {
         if (result.getResultCode() == RESULT_OK) {
-            this.firebaseUser = firebaseAuth.getCurrentUser();
              // TODO : Create Workmate
+            updateHeaderLayoutWithUserData();
         } else {
             startSignInActivity();
         }
@@ -162,24 +166,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void configureNavigationView() {
         this.navigationView = findViewById(R.id.activity_main_nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        updateHeaderLayoutWithUserData();
     }
 
     private void updateHeaderLayoutWithUserData() {
-        View header = navigationView.getHeaderView(0);
-        if (firebaseUser.getPhotoUrl() != null) {
-            ImageView avatar = header.findViewById(R.id.activity_main_nav_view_avatar);
-            Glide.with(this)
-                    .load(firebaseUser.getPhotoUrl())
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(avatar);
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        if (firebaseUser != null) {
+             View header = navigationView.getHeaderView(0);
+            if (firebaseUser.getPhotoUrl() != null) {
+                ImageView avatar = header.findViewById(R.id.activity_main_nav_view_avatar);
+                Glide.with(this)
+                        .load(firebaseUser.getPhotoUrl())
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(avatar);
+            }
+            String name = TextUtils.isEmpty(firebaseUser.getDisplayName()) ? getString(R.string.info_no_username_found) : firebaseUser.getDisplayName();
+            TextView nameTextView = header.findViewById(R.id.activity_main_nav_view_name);
+            nameTextView.setText(name);
+            String email = TextUtils.isEmpty(firebaseUser.getEmail()) ? getString(R.string.info_no_email_found) : firebaseUser.getEmail();
+            TextView emailTextView = header.findViewById(R.id.activity_main_nav_view_email);
+            emailTextView.setText(email);
         }
-        String name = TextUtils.isEmpty(firebaseUser.getDisplayName()) ? getString(R.string.info_no_username_found) : firebaseUser.getDisplayName();
-        TextView nameTextView = header.findViewById(R.id.activity_main_nav_view_name);
-        nameTextView.setText(name);
-        String email = TextUtils.isEmpty(firebaseUser.getEmail()) ? getString(R.string.info_no_email_found) : firebaseUser.getEmail();
-        TextView emailTextView = header.findViewById(R.id.activity_main_nav_view_email);
-        emailTextView.setText(email);
     }
 
     @Override
@@ -190,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.activity_main_drawer_settings: // TODO
                 break;
-            case R.id.activity_main_drawer_logout: firebaseAuth.signOut();
+            case R.id.activity_main_drawer_logout: AuthUI.getInstance().signOut(this).addOnCompleteListener(task->startSignInActivity());
                 break;
         }
         this.drawerLayout.closeDrawer(GravityCompat.START);
