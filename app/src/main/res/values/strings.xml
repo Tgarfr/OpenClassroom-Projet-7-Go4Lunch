@@ -16,4 +16,8 @@
     <string name="info_no_username_found">User Name</string>
     <string name="info_no_email_found">Email</string>
     <string name="avatar">Avatar</string>
+
+    // Workmate List
+    <string name="workmate_list_avatar">Avatar</string>
+    <string name="workmate_list_text_exemple">WorkmateName is eating french (Retaurant Exemple)</string>
 </resources>

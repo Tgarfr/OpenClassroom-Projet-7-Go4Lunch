@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startSignInActivity();
         } else {
             updateHeaderLayoutWithUserData();
+            viewModel.createWorkmate();
         }
     }
 
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             updateHeaderLayoutWithUserData();
         } else {
             startSignInActivity();
+            viewModel.createWorkmate();
         }
     }
 
