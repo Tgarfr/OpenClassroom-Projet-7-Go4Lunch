@@ -37,7 +37,7 @@ public class RestaurantListFragment extends Fragment {
         restaurantListAdapter = new RestaurantListAdapter(DIFF_CALLBACK);
         restaurantListAdapter.submitList(restaurantListLiveData.getValue());
 
-        RecyclerView recyclerView = view.findViewById(R.id.list_restaurant);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerview_list_restaurant);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(restaurantListAdapter);
 

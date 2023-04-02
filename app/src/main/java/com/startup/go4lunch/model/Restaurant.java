@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 public class Restaurant {
 
-    private final Long id;
+    private final long id;
     private final String name;
     private final String type;
     private final float latitude;

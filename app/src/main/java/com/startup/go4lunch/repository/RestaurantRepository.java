@@ -20,6 +20,7 @@ public class RestaurantRepository {
         this.restaurantApi = restaurantApi;
     }
 
+    @NonNull
     public LiveData<List<Restaurant>> getRestaurantListLiveData() {
         return restaurantListLivedata;
     }

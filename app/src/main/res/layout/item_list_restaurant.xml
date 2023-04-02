@@ -10,19 +10,21 @@
         android:id="@+id/restaurant_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:padding="2dp"
         android:text="Name"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:ellipsize="end"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/restaurant_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:padding="2dp"
         android:text="Address"
         app:layout_constraintBottom_toTopOf="@id/restaurant_opening_time"
@@ -33,6 +35,8 @@
         android:id="@+id/restaurant_opening_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:padding="2dp"
         android:text="Open"
         android:textStyle="italic"
@@ -80,24 +84,23 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:src="@drawable/icon_restaurant_star_24"
-        app:layout_constraintTop_toBottomOf="@id/restaurant_workmate_image"
-        app:layout_constraintRight_toLeftOf="@id/restaurant_image"/>
+        app:layout_constraintRight_toLeftOf="@id/restaurant_image"
+        app:layout_constraintTop_toBottomOf="@id/restaurant_workmate_image" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/restaurant_star_2"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:src="@drawable/icon_restaurant_star_24"
-        app:layout_constraintTop_toBottomOf="@id/restaurant_workmate_image"
-        app:layout_constraintRight_toLeftOf="@id/restaurant_star_1"/>
+        app:layout_constraintRight_toLeftOf="@id/restaurant_star_1"
+        app:layout_constraintTop_toBottomOf="@id/restaurant_workmate_image" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/restaurant_star_3"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:src="@drawable/icon_restaurant_star_24"
-        app:layout_constraintTop_toBottomOf="@id/restaurant_workmate_image"
-        app:layout_constraintRight_toLeftOf="@id/restaurant_star_2"/>
-
+        app:layout_constraintRight_toLeftOf="@id/restaurant_star_2"
+        app:layout_constraintTop_toBottomOf="@id/restaurant_workmate_image" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
