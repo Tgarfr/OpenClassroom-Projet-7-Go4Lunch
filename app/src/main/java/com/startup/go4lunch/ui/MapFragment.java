@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -29,10 +30,9 @@ import java.util.List;
 
 public class MapFragment extends Fragment {
 
-    MapFragmentViewModel viewModel;
-    MapView mapView;
-    Context context;
-    Location currentLocation;
+    private MapView mapView;
+    private Context context;
+    private LiveData<Location> locationLiveData;
 
     @Nullable
     @Override
@@ -40,9 +40,10 @@ public class MapFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
-        viewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(MapFragmentViewModel.class);
-        viewModel.getLocationLiveData().observe(getViewLifecycleOwner(), observerLocationLiveData);
-        viewModel.getRestaurantListLiveData().observe(getViewLifecycleOwner(), observerListRestaurantLiveData);
+        MapFragmentViewModel viewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(MapFragmentViewModel.class);
+        locationLiveData = viewModel.getLocationLiveData();
+        locationLiveData.observe(getViewLifecycleOwner(), location -> centerToCurrentLocation());
+        viewModel.getRestaurantListLiveData().observe(getViewLifecycleOwner(), RestaurantListLiveDataObserver);
 
         context = requireContext();
         Configuration.getInstance().setUserAgentValue(context.getPackageName());
@@ -71,15 +72,7 @@ public class MapFragment extends Fragment {
         mapView.onPause();
     }
 
-    Observer<Location> observerLocationLiveData = new Observer<Location>() {
-        @Override
-        public void onChanged(Location newLocation) {
-            currentLocation = newLocation;
-            centerToCurrentLocation();
-        }
-    };
-
-    Observer<List<Restaurant>> observerListRestaurantLiveData = new Observer<List<Restaurant>>() {
+    Observer<List<Restaurant>> RestaurantListLiveDataObserver = new Observer<List<Restaurant>>() {
         @Override
         public void onChanged(List<Restaurant> restaurantList) {
 
@@ -95,7 +88,9 @@ public class MapFragment extends Fragment {
     };
 
     private void centerToCurrentLocation() {
-        mapView.getController().setCenter(new GeoPoint(currentLocation.getLatitude(), currentLocation.getLongitude()));
+        if (locationLiveData.getValue() != null) {
+            mapView.getController().setCenter(new GeoPoint(locationLiveData.getValue().getLatitude(), locationLiveData.getValue().getLongitude()));
+        }
     }
 }
 
