@@ -13,6 +13,7 @@ public class LocationRepository {
         locationLiveData = new MutableLiveData<>();
     }
 
+    @NonNull
     public MutableLiveData<Location> getLocationLiveData() {
         return locationLiveData;
     }
