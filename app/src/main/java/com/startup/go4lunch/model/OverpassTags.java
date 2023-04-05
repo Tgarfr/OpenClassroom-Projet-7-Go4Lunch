@@ -33,6 +33,14 @@ public class OverpassTags {
     @Expose
     private String openingHours;
 
+    @SerializedName("phone")
+    @Expose
+    private String phone;
+
+    @SerializedName("website")
+    @Expose
+    private String website;
+
     public String getName() {
         return name;
     }
@@ -59,5 +67,13 @@ public class OverpassTags {
 
     public String getOpeningHours() {
         return openingHours;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getWebsite() {
+        return website;
     }
 }

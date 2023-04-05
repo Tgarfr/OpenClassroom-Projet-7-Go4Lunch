@@ -8,6 +8,7 @@ import com.startup.go4lunch.repository.RestaurantRepository;
 import com.startup.go4lunch.repository.WorkmateRepository;
 import com.startup.go4lunch.ui.MainActivityViewModel;
 import com.startup.go4lunch.ui.MapFragmentViewModel;
+import com.startup.go4lunch.ui.RestaurantDetailActivityViewModel;
 import com.startup.go4lunch.ui.RestaurantListFragmentViewModel;
 import com.startup.go4lunch.ui.WorkmateListFragmentViewModel;
 
@@ -49,6 +50,9 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         }
         if (modelClass.isAssignableFrom(MapFragmentViewModel.class)) {
             return (T) new MapFragmentViewModel(locationRepository,restaurantRepository);
+        }
+        if (modelClass.isAssignableFrom(RestaurantDetailActivityViewModel.class)) {
+            return (T) new RestaurantDetailActivityViewModel(restaurantRepository);
         }
         throw new IllegalArgumentException("Unknown ViewModel class");
     }
