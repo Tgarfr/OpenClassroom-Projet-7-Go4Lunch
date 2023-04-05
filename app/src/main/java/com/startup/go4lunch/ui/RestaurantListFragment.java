@@ -48,17 +48,12 @@ public class RestaurantListFragment extends Fragment {
             new DiffUtil.ItemCallback<Restaurant>() {
                 @Override
                 public boolean areItemsTheSame(@NonNull Restaurant oldItem, @NonNull Restaurant newItem) {
-                    return oldItem.getId().equals(newItem.getId());
+                    return oldItem.getId() == newItem.getId();
                 }
 
                 @Override
                 public boolean areContentsTheSame(@NonNull Restaurant oldItem, @NonNull Restaurant newItem) {
-                    return oldItem.getName().equals(newItem.getName()) &
-                            oldItem.getAddress().equals(newItem.getAddress()) &
-                            oldItem.getType().equals(newItem.getType()) &
-                            oldItem.getOpeningTime().equals(newItem.getOpeningTime()) &
-                            oldItem.getLatitude() == newItem.getLatitude() &
-                            oldItem.getLongitude() == newItem.getLongitude();
+                    return oldItem.equals(newItem);
                 }
             };
 

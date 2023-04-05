@@ -15,16 +15,17 @@ import java.util.Objects;
 
 public class RestaurantRepository {
 
-    private MutableLiveData<List<Restaurant>> restaurantListLivedata;
     private final RestaurantApi restaurantApi;
+    private final MutableLiveData<List<Restaurant>> restaurantListLivedata;
 
     public RestaurantRepository(@NonNull RestaurantApi restaurantApi) {
         this.restaurantApi = restaurantApi;
+        restaurantListLivedata = restaurantApi.getRestaurantListLiveData();
     }
 
     @NonNull
     public LiveData<List<Restaurant>> getRestaurantListLiveData() {
-        return restaurantApi.getRestaurantListLiveData();
+        return restaurantListLivedata;
     }
 
     public void updateLocationRestaurantList(@NonNull Location location) {

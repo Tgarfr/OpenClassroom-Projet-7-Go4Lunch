@@ -1,6 +1,9 @@
 package com.startup.go4lunch.model;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import java.util.Objects;
 
 public class Restaurant {
 
@@ -23,7 +26,7 @@ public class Restaurant {
         this.openingTime = openingTime;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
@@ -62,13 +65,13 @@ public class Restaurant {
 
             String address = null;
             if (overpassElements.getTags().getHouseNumber() != null) {
-                address = overpassElements.getTags().getHouseNumber()+" ";
+                address = overpassElements.getTags().getHouseNumber() + " ";
             }
             if (overpassElements.getTags().getStreet() != null) {
-                address = address + overpassElements.getTags().getStreet()+" ";
+                address = address + overpassElements.getTags().getStreet() + " ";
             }
             if (overpassElements.getTags().getPostCode() != null) {
-                address = address + overpassElements.getTags().getPostCode()+" ";
+                address = address + overpassElements.getTags().getPostCode() + " ";
             }
             if (overpassElements.getTags().getCity() != null) {
                 address = address + overpassElements.getTags().getCity();
@@ -88,5 +91,23 @@ public class Restaurant {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public boolean equals(@Nullable Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
+        Restaurant restaurant = (Restaurant) object;
+        return restaurant.id == getId() &&
+                Objects.equals(restaurant.name, getName()) &&
+                Objects.equals(restaurant.type, getType()) &&
+                restaurant.latitude == getLatitude() &&
+                restaurant.longitude == getLongitude() &&
+                Objects.equals(restaurant.address, getAddress()) &&
+                Objects.equals(restaurant.openingTime, getOpeningTime());
     }
 }

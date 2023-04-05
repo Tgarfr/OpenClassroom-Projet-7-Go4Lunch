@@ -17,7 +17,7 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
         switch (position) {
             case 0 : return new MapFragment();
             case 1 : return new RestaurantListFragment();
-            case 2 : return new WorkmateFragment();
+            case 2 : return new WorkmateListFragment();
         }
         return new RestaurantListFragment();
     }

@@ -14,6 +14,7 @@ public class FakeRestaurantApi implements RestaurantApi {
 
     private final MutableLiveData<List<Restaurant>> restaurantListLiveData = new MutableLiveData<>(FAKE_RESTAURANTS_LIST);
 
+    @NonNull
     public MutableLiveData<List<Restaurant>> getRestaurantListLiveData() {
         return restaurantListLiveData;
     }
@@ -27,7 +28,5 @@ public class FakeRestaurantApi implements RestaurantApi {
             new Restaurant(5L, "Restaurant 5", "type 5", 1555, 2555, "5 rue de la Paix, 75002 Paris", "5h00"));
 
     @Override
-    public void fetchLocationNearLocation(@NonNull Location location) {
-
-    }
+    public void fetchLocationNearLocation(@NonNull Location location) {}
 }

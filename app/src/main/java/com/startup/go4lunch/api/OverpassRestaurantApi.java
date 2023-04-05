@@ -27,6 +27,7 @@ public class OverpassRestaurantApi implements RestaurantApi, Callback<OverpassGs
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
+    @NonNull
     @Override
     public MutableLiveData<List<Restaurant>> getRestaurantListLiveData() {
         return restaurantListLiveData;
