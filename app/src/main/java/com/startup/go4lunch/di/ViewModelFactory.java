@@ -9,7 +9,7 @@ import com.startup.go4lunch.repository.WorkmateRepository;
 import com.startup.go4lunch.ui.MainActivityViewModel;
 import com.startup.go4lunch.ui.MapFragmentViewModel;
 import com.startup.go4lunch.ui.RestaurantListFragmentViewModel;
-import com.startup.go4lunch.ui.WorkmateFragmentViewModel;
+import com.startup.go4lunch.ui.WorkmateListFragmentViewModel;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
 
@@ -44,8 +44,8 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         if (modelClass.isAssignableFrom(RestaurantListFragmentViewModel.class)) {
             return (T) new RestaurantListFragmentViewModel(restaurantRepository,locationRepository);
         }
-        if (modelClass.isAssignableFrom(WorkmateFragmentViewModel.class)) {
-            return (T) new WorkmateFragmentViewModel(workmateRepository, restaurantRepository);
+        if (modelClass.isAssignableFrom(WorkmateListFragmentViewModel.class)) {
+            return (T) new WorkmateListFragmentViewModel(workmateRepository, restaurantRepository);
         }
         if (modelClass.isAssignableFrom(MapFragmentViewModel.class)) {
             return (T) new MapFragmentViewModel(locationRepository,restaurantRepository);
