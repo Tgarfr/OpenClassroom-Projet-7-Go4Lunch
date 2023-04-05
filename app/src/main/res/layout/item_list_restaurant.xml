@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/item_list_restaurant"
     android:layout_width="match_parent"
     android:layout_height="80dp"
     android:padding="5dp"
+    android:paddingStart="0dp"
     android:paddingEnd="10dp">
 
     <TextView
@@ -13,7 +15,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:padding="2dp"
-        android:text="Name"
+        android:text="@string/restaurant_list_name"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -26,7 +28,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:padding="2dp"
-        android:text="Address"
+        android:text="@string/restaurant_list_address"
         app:layout_constraintBottom_toTopOf="@id/restaurant_opening_time"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/restaurant_name" />
@@ -38,7 +40,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:padding="2dp"
-        android:text="Open"
+        android:text="@string/restaurant_list_opening_time"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -58,7 +60,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="2dp"
-        android:text="120 m"
+        android:text="@string/restaurant_list_distance"
         app:layout_constraintRight_toLeftOf="@id/restaurant_image"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -67,7 +69,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="2dp"
-        android:text="(3)"
+        android:text="@string/restaurant_list_workmate_count"
         app:layout_constraintBottom_toBottomOf="@id/restaurant_workmate_image"
         app:layout_constraintRight_toLeftOf="@id/restaurant_image" />
 

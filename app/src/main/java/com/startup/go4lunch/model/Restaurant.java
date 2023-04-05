@@ -14,9 +14,10 @@ public class Restaurant {
     private final float longitude;
     private final String address;
     private final String openingTime;
+    private final String phone;
+    private final String website;
 
-
-    public Restaurant(Long id, String name, String type, float latitude, float longitude, String address, String openingTime) {
+    public Restaurant(Long id, String name, String type, float latitude, float longitude, String address, String openingTime, String phone, String website) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -24,6 +25,8 @@ public class Restaurant {
         this.longitude = longitude;
         this.address = address;
         this.openingTime = openingTime;
+        this.phone = phone;
+        this.website = website;
     }
 
     public long getId() {
@@ -54,6 +57,13 @@ public class Restaurant {
         return openingTime;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
 
     public static Restaurant from(@NonNull OverpassElements overpassElements) {
         if (overpassElements.getTags().getName() != null) {
@@ -62,6 +72,8 @@ public class Restaurant {
             String type = overpassElements.getTags().getCuisine();
             float latitude = overpassElements.getLat();
             float longitude = overpassElements.getLon();
+            String phone = overpassElements.getTags().getPhone();
+            String website = overpassElements.getTags().getWebsite();
 
             String address = null;
             if (overpassElements.getTags().getHouseNumber() != null) {
@@ -87,7 +99,7 @@ public class Restaurant {
                 openingTime = "Opening time not provided";
             }
 
-            return new Restaurant(id, name, type, latitude, longitude, address, openingTime);
+            return new Restaurant(id, name, type, latitude, longitude, address, openingTime, phone, website);
         } else {
             return null;
         }

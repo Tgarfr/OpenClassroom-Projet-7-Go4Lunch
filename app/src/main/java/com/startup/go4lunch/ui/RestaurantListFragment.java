@@ -1,5 +1,6 @@
 package com.startup.go4lunch.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -21,7 +23,7 @@ import com.startup.go4lunch.model.Restaurant;
 
 import java.util.List;
 
-public class RestaurantListFragment extends Fragment {
+public class RestaurantListFragment extends Fragment implements RestaurantListAdapter.RestaurantListAdapterInterface {
 
     private RestaurantListAdapter restaurantListAdapter;
 
@@ -34,7 +36,7 @@ public class RestaurantListFragment extends Fragment {
         LiveData<List<Restaurant>> restaurantListLiveData = viewModel.getRestaurantListLiveData();
         restaurantListLiveData.observe(getViewLifecycleOwner(), restaurantListObserver);
 
-        restaurantListAdapter = new RestaurantListAdapter(DIFF_CALLBACK);
+        restaurantListAdapter = new RestaurantListAdapter(DIFF_CALLBACK, this);
         restaurantListAdapter.submitList(restaurantListLiveData.getValue());
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerview_list_restaurant);
@@ -63,4 +65,11 @@ public class RestaurantListFragment extends Fragment {
             restaurantListAdapter.submitList(restaurantListNew);
         }
     };
+
+    @Override
+    public void clickOnRestaurant(Restaurant restaurant) {
+        Intent intent = new Intent(requireContext(), RestaurantDetailActivity.class);
+        intent.putExtra("restaurantId",restaurant.getId());
+        ActivityCompat.startActivity(requireActivity(), intent, null);
+    }
 }
