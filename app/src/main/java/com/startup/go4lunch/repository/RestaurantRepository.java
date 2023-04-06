@@ -11,7 +11,6 @@ import com.startup.go4lunch.api.RestaurantApi;
 import com.startup.go4lunch.model.Restaurant;
 
 import java.util.List;
-import java.util.Objects;
 
 public class RestaurantRepository {
 
@@ -34,9 +33,12 @@ public class RestaurantRepository {
 
     @Nullable
     public Restaurant getRestaurantFromId(long id) {
-        for (Restaurant restaurant: Objects.requireNonNull(restaurantListLivedata.getValue())) {
-            if (restaurant.getId() == id) {
-                return restaurant;
+        List<Restaurant> restaurantList = restaurantListLivedata.getValue();
+        if (restaurantList != null) {
+            for (Restaurant restaurant: restaurantList) {
+                if (restaurant.getId() == id) {
+                    return restaurant;
+                }
             }
         }
         return null;

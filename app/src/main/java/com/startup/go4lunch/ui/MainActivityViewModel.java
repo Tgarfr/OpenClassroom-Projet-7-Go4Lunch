@@ -5,9 +5,11 @@ import android.location.Location;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 
+import com.google.firebase.auth.FirebaseUser;
+import com.startup.go4lunch.model.Workmate;
 import com.startup.go4lunch.repository.LocationRepository;
 import com.startup.go4lunch.repository.RestaurantRepository;
- import com.startup.go4lunch.repository.WorkmateRepository;
+import com.startup.go4lunch.repository.WorkmateRepository;
 
 public class MainActivityViewModel extends ViewModel {
 
@@ -29,7 +31,10 @@ public class MainActivityViewModel extends ViewModel {
         restaurantRepository.updateLocationRestaurantList(location);
     }
 
-    public void createWorkmate() {
-        workmateRepository.createWorkmate();
+    public void createWorkmate(FirebaseUser firebaseUser) {
+        String name = firebaseUser.getDisplayName() != null ? firebaseUser.getDisplayName() : "Name";
+        String urlAvatar = firebaseUser.getPhotoUrl() != null ? firebaseUser.getPhotoUrl().toString() : null;
+        Workmate workmate = new Workmate(firebaseUser.getUid(), name,urlAvatar, 0);
+        workmateRepository.createWorkmate(workmate);
     }
 }

@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.startup.go4lunch.model.Workmate;
 import com.startup.go4lunch.model.WorkmateListItem;
 import com.startup.go4lunch.repository.RestaurantRepository;
@@ -16,26 +15,25 @@ import java.util.List;
 public class WorkmateListFragmentViewModel extends ViewModel {
 
     private final RestaurantRepository restaurantRepository;
-    LiveData<List<DocumentSnapshot>> workmateDocumentSnapshotListLiveData;
+    private final LiveData<List<Workmate>> workmateListLiveData;
 
-    public WorkmateListFragmentViewModel(@NonNull WorkmateRepository workmateRepository, RestaurantRepository restaurantRepository) {
-        workmateDocumentSnapshotListLiveData = workmateRepository.getWorkmateDocumentsSnapshotListLiveData();
+    public WorkmateListFragmentViewModel(@NonNull WorkmateRepository workmateRepository,@NonNull RestaurantRepository restaurantRepository) {
         this.restaurantRepository = restaurantRepository;
+        workmateListLiveData = workmateRepository.getWorkmateListLiveData();
     }
 
-    public LiveData<List<DocumentSnapshot>> getWorkmateDocumentSnapshotListLiveData() {
-        return workmateDocumentSnapshotListLiveData;
+    @NonNull
+    public LiveData<List<Workmate>> getWorkmateListLiveData() {
+        return workmateListLiveData;
     }
 
+    @NonNull
     public List<WorkmateListItem> getWorkmateListItemList() {
-        List<DocumentSnapshot> documentsList = workmateDocumentSnapshotListLiveData.getValue();
+        List<Workmate> workmateList = workmateListLiveData.getValue();
         List<WorkmateListItem> workmateListItem = new ArrayList<>();
-        if (documentsList != null) {
-            for (DocumentSnapshot documentSnapshot: documentsList) {
-                Workmate workmate = documentSnapshot.toObject(Workmate.class);
-                if (workmate != null) {
-                    workmateListItem.add(new WorkmateListItem(workmate,restaurantRepository.getRestaurantFromId(workmate.getRestaurantUid())));
-                }
+        if (workmateList != null) {
+            for (Workmate workmate: workmateList) {
+                workmateListItem.add(new WorkmateListItem(workmate,restaurantRepository.getRestaurantFromId(workmate.getRestaurantUid())));
             }
         }
         return workmateListItem;

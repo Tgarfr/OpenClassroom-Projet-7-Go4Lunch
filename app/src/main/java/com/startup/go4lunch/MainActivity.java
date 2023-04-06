@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startSignInActivity();
         } else {
             updateHeaderLayoutWithUserData();
-            viewModel.createWorkmate();
+            viewModel.createWorkmate(firebaseUser);
         }
     }
 
@@ -99,7 +99,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             updateHeaderLayoutWithUserData();
         } else {
             startSignInActivity();
-            viewModel.createWorkmate();
+            FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+            if (firebaseUser != null) {
+                viewModel.createWorkmate(firebaseUser);
+            }
         }
     }
 
