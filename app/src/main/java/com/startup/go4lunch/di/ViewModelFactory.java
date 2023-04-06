@@ -21,7 +21,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     private ViewModelFactory() {
         this.restaurantRepository = Injection.getRestaurantRepository();
         this.locationRepository = new LocationRepository();
-        this.workmateRepository = new WorkmateRepository();
+        this.workmateRepository = Injection.getWorkmateRepository();
     }
 
     public static ViewModelFactory getInstance() {
