@@ -44,6 +44,10 @@ public class RestaurantListFragment extends Fragment {
         return view;
     }
 
+    public void submitRestaurantList(@NonNull List<Restaurant> restaurantList) {
+        restaurantListAdapter.submitList(restaurantList);
+    }
+
     public static final DiffUtil.ItemCallback<Restaurant> DIFF_CALLBACK =
             new DiffUtil.ItemCallback<Restaurant>() {
                 @Override

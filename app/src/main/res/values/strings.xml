@@ -16,4 +16,9 @@
     <string name="info_no_username_found">User Name</string>
     <string name="info_no_email_found">Email</string>
     <string name="avatar">Avatar</string>
+
+    // Search menu
+    <string name="search_menu">Search menu</string>
+    <string name="search_menu_restaurant">Search restaurants</string>
+    <string name="search_menu_workmate">Search workmates</string>
 </resources>

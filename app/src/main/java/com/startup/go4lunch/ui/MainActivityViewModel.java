@@ -5,8 +5,11 @@ import android.location.Location;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 
+import com.startup.go4lunch.model.Restaurant;
 import com.startup.go4lunch.repository.LocationRepository;
 import com.startup.go4lunch.repository.RestaurantRepository;
+
+import java.util.List;
 
 public class MainActivityViewModel extends ViewModel {
 
@@ -24,5 +27,10 @@ public class MainActivityViewModel extends ViewModel {
         }
         locationRepository.setLocation(location);
         restaurantRepository.updateLocationRestaurantList(location);
+    }
+
+    @NonNull
+    public List<Restaurant> searchRestaurantBy(@NonNull String text) {
+        return restaurantRepository.getRestaurantListResearchedByText(text);
     }
 }
