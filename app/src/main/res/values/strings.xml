@@ -39,4 +39,9 @@
     <string name="workmate_list_text_example">WorkmateName is eating french (Restaurant Example)</string>
     <string name="workmate_list_item_text">%s is eating %s ( %s )</string>
     <string name="workmate_list_item_text_no_restaurant_choice">%s hasn\'t decided yet</string>
+
+    // Search menu
+    <string name="search_menu">Search menu</string>
+    <string name="search_menu_restaurant">Search restaurants</string>
+    <string name="search_menu_workmate">Search workmates</string>
 </resources>

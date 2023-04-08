@@ -1,10 +1,13 @@
 package com.startup.go4lunch;
 
 import android.Manifest;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,6 +17,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -37,7 +41,10 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.startup.go4lunch.di.ViewModelFactory;
+import com.startup.go4lunch.model.Restaurant;
 import com.startup.go4lunch.ui.MainActivityViewModel;
+import com.startup.go4lunch.ui.MapFragment;
+import com.startup.go4lunch.ui.RestaurantListFragment;
 import com.startup.go4lunch.ui.ViewPagerAdapter;
 
 import java.util.Arrays;
@@ -45,11 +52,15 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private final static int LOCATION_REQUEST_CODE = 1;
     private MainActivityViewModel viewModel;
     private FirebaseAuth firebaseAuth;
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+    private TabLayout tabLayout;
+    private final MapFragment mapFragment = new MapFragment();
+    private final RestaurantListFragment restaurantListFragment = new RestaurantListFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +79,62 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onStart() {
         super.onStart();
         verifyFirebaseUser();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_main_menu_search, menu);
+        MenuItem menuItem = menu.findItem(R.id.action_search);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        final SearchView searchView = (SearchView) menuItem.getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(true);
+        searchView.setBackgroundColor(getResources().getColor(com.firebase.ui.auth.R.color.design_default_color_on_primary));
+
+        menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
+                switch (tabLayout.getSelectedTabPosition()) {
+                    case 0 :
+                    case 1 :
+                        searchView.setQueryHint(getString(R.string.search_menu_restaurant)); break;
+                    case 2: searchView.setQueryHint(getString(R.string.search_menu_workmate)); break;
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
+                return true;
+            }
+        });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                switch (tabLayout.getSelectedTabPosition()) {
+                    case 1: searchRestaurant(newText); break;
+                    case 2: searchWorkmmate(newText); break;
+                }
+                return false;
+            }
+        });
+
+        return true;
+    }
+
+    private void searchRestaurant(String text) {
+        List<Restaurant> restaurantList = viewModel.searchRestaurantBy(text);
+        restaurantListFragment.submitRestaurantList(restaurantList);
+    }
+
+    private void searchWorkmmate(String text) {
+        // TODO
     }
 
     private void verifyFirebaseUser() {
@@ -117,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private boolean checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
             return false;
         }
         return true;
@@ -128,15 +195,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        getCurrentLocation();
+        if (requestCode == LOCATION_REQUEST_CODE) {
+            getCurrentLocation();
+        }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     private void configureViewPager() {
         ViewPager2 viewPager = findViewById(R.id.view_pager);
-        TabLayout tabLayout = findViewById(R.id.menu);
+        tabLayout = findViewById(R.id.menu);
 
-        viewPager.setAdapter(new ViewPagerAdapter(this));
+        viewPager.setAdapter(new ViewPagerAdapter(this, mapFragment, restaurantListFragment));
 
         TabLayoutMediator.TabConfigurationStrategy tabConfigurationStrategy = (tab, position) -> {
             switch (position) {
