@@ -43,12 +43,12 @@ public class RestaurantListFragmentViewModel extends androidx.lifecycle.ViewMode
 
         restaurantListObserver = restaurantList ->  {
             List<Restaurant> filteredRestaurantList = filterByName(restaurantList, searchRepository.getRestaurantListFragmentSearchLiveData().getValue());
-            List<RestaurantListItem> restaurantListItemList = generateRestaurantListItemLive(filteredRestaurantList);
+            List<RestaurantListItem> restaurantListItemList = generateRestaurantListItem(filteredRestaurantList);
             restaurantListItemListLiveData.setValue(sortRestaurantListItemList(sortMethod, restaurantListItemList));
         };
         searchObserver = string -> {
             List<Restaurant> filteredRestaurantList = filterByName(restaurantRepository.getRestaurantListLiveData().getValue(), string);
-            List<RestaurantListItem> restaurantListItemList = generateRestaurantListItemLive(filteredRestaurantList);
+            List<RestaurantListItem> restaurantListItemList = generateRestaurantListItem(filteredRestaurantList);
             restaurantListItemListLiveData.setValue(sortRestaurantListItemList(sortMethod, restaurantListItemList));
         };
         locationObserver = location -> {
@@ -93,7 +93,7 @@ public class RestaurantListFragmentViewModel extends androidx.lifecycle.ViewMode
         super.onCleared();
     }
 
-    private List<RestaurantListItem> generateRestaurantListItemLive(@Nullable List<Restaurant> restaurantList) {
+    private List<RestaurantListItem> generateRestaurantListItem(@Nullable List<Restaurant> restaurantList) {
         List<RestaurantListItem> restaurantListItemList = new ArrayList<>();
         if (restaurantList != null) {
             Location location = locationRepository.getLocationLiveData().getValue();
