@@ -37,7 +37,6 @@ public class RestaurantRepositoryTest {
     @InjectMocks
     private RestaurantRepository restaurantRepository;
 
-
     @Test
     public void getRestaurantListLiveDataTest() throws InterruptedException {
         // Given
@@ -56,11 +55,7 @@ public class RestaurantRepositoryTest {
     @Test
     public void updateLocationRestaurantListTest() {
         // Given
-        double expectedLatitude = 48.85834269238794;
-        double expectedLongitude = 2.294392951104722;
-        final Location expectedLocation = new Location("Fake Location");
-        expectedLocation.setLatitude(expectedLatitude);
-        expectedLocation.setLongitude(expectedLongitude);
+        Location expectedLocation = new Location("Fake Location");
 
         // When
         restaurantRepository.updateLocationRestaurantList(expectedLocation);
