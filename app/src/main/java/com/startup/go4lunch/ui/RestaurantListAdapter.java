@@ -11,11 +11,12 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.startup.go4lunch.R;
+import com.startup.go4lunch.model.RestaurantListItem;
 import com.startup.go4lunch.model.Restaurant;
 
-public class RestaurantListAdapter extends ListAdapter<Restaurant, RestaurantListAdapter.ViewHolder> {
+public class RestaurantListAdapter extends ListAdapter<RestaurantListItem, RestaurantListAdapter.ViewHolder> {
 
-    protected RestaurantListAdapter(@NonNull DiffUtil.ItemCallback<Restaurant> diffCallback) {
+    protected RestaurantListAdapter(@NonNull DiffUtil.ItemCallback<RestaurantListItem> diffCallback) {
         super(diffCallback);
     }
 
@@ -29,10 +30,15 @@ public class RestaurantListAdapter extends ListAdapter<Restaurant, RestaurantLis
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Restaurant restaurant = getCurrentList().get(position);
+        RestaurantListItem restaurantListItem = getCurrentList().get(position);
+        Restaurant restaurant = restaurantListItem.getRestaurant();
+
         holder.restaurantName.setText(restaurant.getName());
         holder.restaurantAdress.setText(restaurant.getAddress());
         holder.restaurantOpeningTime.setText(restaurant.getOpeningTime());
+
+        holder.restaurantDistance.setText(String.format("%sm",restaurantListItem.getDistance()));
+        holder.numberOfWorkmate.setText(String.format("(%s)",restaurantListItem.getNumberOfWorkmate()));
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -40,6 +46,8 @@ public class RestaurantListAdapter extends ListAdapter<Restaurant, RestaurantLis
         public TextView restaurantName;
         public TextView restaurantAdress;
         public TextView restaurantOpeningTime;
+        public TextView restaurantDistance;
+        public TextView numberOfWorkmate;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -47,6 +55,8 @@ public class RestaurantListAdapter extends ListAdapter<Restaurant, RestaurantLis
             restaurantName = itemView.findViewById(R.id.restaurant_name);
             restaurantAdress = itemView.findViewById(R.id.restaurant_address);
             restaurantOpeningTime = itemView.findViewById(R.id.restaurant_opening_time);
+            restaurantDistance = itemView.findViewById(R.id.restaurant_distance);
+            numberOfWorkmate = itemView.findViewById(R.id.restaurant_number_of_workmate);
         }
     }
 }

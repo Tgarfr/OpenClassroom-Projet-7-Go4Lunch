@@ -17,12 +17,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.startup.go4lunch.R;
 import com.startup.go4lunch.di.ViewModelFactory;
+import com.startup.go4lunch.model.RestaurantListItem;
 import com.startup.go4lunch.model.Restaurant;
 
 import java.util.List;
 
 public class RestaurantListFragment extends Fragment {
 
+    private RestaurantListFragmentViewModel viewModel;
     private RestaurantListAdapter restaurantListAdapter;
 
     @Nullable
@@ -30,12 +32,12 @@ public class RestaurantListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list_restaurant, container, false);
 
-        RestaurantListFragmentViewModel viewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(RestaurantListFragmentViewModel.class);
+        viewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(RestaurantListFragmentViewModel.class);
         LiveData<List<Restaurant>> restaurantListLiveData = viewModel.getRestaurantListLiveData();
         restaurantListLiveData.observe(getViewLifecycleOwner(), restaurantListObserver);
 
         restaurantListAdapter = new RestaurantListAdapter(DIFF_CALLBACK);
-        restaurantListAdapter.submitList(restaurantListLiveData.getValue());
+        restaurantListAdapter.submitList(viewModel.getListItemRestaurant());
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerview_list_restaurant);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -44,28 +46,22 @@ public class RestaurantListFragment extends Fragment {
         return view;
     }
 
-    public static final DiffUtil.ItemCallback<Restaurant> DIFF_CALLBACK =
-            new DiffUtil.ItemCallback<Restaurant>() {
-                @Override
-                public boolean areItemsTheSame(@NonNull Restaurant oldItem, @NonNull Restaurant newItem) {
-                    return oldItem.getId().equals(newItem.getId());
-                }
+    public static final DiffUtil.ItemCallback<RestaurantListItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<RestaurantListItem>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull RestaurantListItem oldItem, @NonNull RestaurantListItem newItem) {
+            return oldItem.getRestaurant().getId().equals(newItem.getRestaurant().getId());
+        }
 
-                @Override
-                public boolean areContentsTheSame(@NonNull Restaurant oldItem, @NonNull Restaurant newItem) {
-                    return oldItem.getName().equals(newItem.getName()) &
-                            oldItem.getAddress().equals(newItem.getAddress()) &
-                            oldItem.getType().equals(newItem.getType()) &
-                            oldItem.getOpeningTime().equals(newItem.getOpeningTime()) &
-                            oldItem.getLatitude() == newItem.getLatitude() &
-                            oldItem.getLongitude() == newItem.getLongitude();
-                }
-            };
+        @Override
+        public boolean areContentsTheSame(@NonNull RestaurantListItem oldItem, @NonNull RestaurantListItem newItem) {
+            return oldItem.equals(newItem);
+        }
+    };
 
     private final Observer<List<Restaurant>> restaurantListObserver = new Observer<List<Restaurant>>() {
         @Override
         public void onChanged(List<Restaurant> restaurantListNew) {
-            restaurantListAdapter.submitList(restaurantListNew);
+            restaurantListAdapter.submitList(viewModel.getListItemRestaurant());
         }
     };
 }
