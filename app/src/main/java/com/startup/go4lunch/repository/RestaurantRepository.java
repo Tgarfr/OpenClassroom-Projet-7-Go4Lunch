@@ -46,17 +46,21 @@ public class RestaurantRepository {
     }
 
     @NonNull
-    public List<Restaurant> getRestaurantListResearchedByString(@NonNull String string) {
+    public List<Restaurant> getRestaurantListResearchedByString(@Nullable String string) {
         List<Restaurant> restaurantList = restaurantApi.getRestaurantListLiveData().getValue();
-        List<Restaurant> restaurantListResearched = new ArrayList<>();
         if (restaurantList != null) {
+            if (string == null) {
+                return restaurantList;
+            }
+            List<Restaurant> restaurantListResearched = new ArrayList<>();
             for (Restaurant restaurant: restaurantList) {
                 if (restaurant.getName().toLowerCase().contains(string.toLowerCase())) {
                     restaurantListResearched.add(restaurant);
                 }
             }
+            return restaurantListResearched;
         }
-        return restaurantListResearched;
+        return new ArrayList<>();
     }
 
     @Nullable

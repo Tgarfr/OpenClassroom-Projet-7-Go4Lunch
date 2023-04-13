@@ -1,6 +1,5 @@
 package com.startup.go4lunch.ui;
 
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,17 +12,18 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.startup.go4lunch.R;
+import com.startup.go4lunch.model.RestaurantListItem;
 import com.startup.go4lunch.model.Restaurant;
 
-public class RestaurantListAdapter extends ListAdapter<Restaurant, RestaurantListAdapter.ViewHolder> {
+public class RestaurantListAdapter extends ListAdapter<RestaurantListItem, RestaurantListAdapter.ViewHolder> {
 
     RestaurantListAdapterInterface restaurantListAdapterInterface;
 
     interface RestaurantListAdapterInterface {
-        void clickOnRestaurant(Restaurant restaurant);
+        void clickOnRestaurant(@NonNull Restaurant restaurant);
     }
 
-    protected RestaurantListAdapter(@NonNull DiffUtil.ItemCallback<Restaurant> diffCallback, RestaurantListAdapterInterface restaurantListAdapterInterface) {
+    protected RestaurantListAdapter(@NonNull DiffUtil.ItemCallback<RestaurantListItem> diffCallback,@NonNull RestaurantListAdapterInterface restaurantListAdapterInterface) {
         super(diffCallback);
         this.restaurantListAdapterInterface = restaurantListAdapterInterface;
     }
@@ -38,10 +38,14 @@ public class RestaurantListAdapter extends ListAdapter<Restaurant, RestaurantLis
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Restaurant restaurant = getCurrentList().get(position);
+        RestaurantListItem restaurantListItem = getCurrentList().get(position);
+        Restaurant restaurant = restaurantListItem.getRestaurant();
+
         holder.restaurantName.setText(restaurant.getName());
         holder.restaurantAdress.setText(restaurant.getAddress());
         holder.restaurantOpeningTime.setText(restaurant.getOpeningTime());
+        holder.restaurantDistance.setText(String.format("%sm",restaurantListItem.getDistance()));
+        holder.numberOfWorkmate.setText(String.format("(%s)",restaurantListItem.getNumberOfWorkmate()));
         holder.restaurantItem.setOnClickListener( view -> restaurantListAdapterInterface.clickOnRestaurant(restaurant));
     }
 
@@ -50,6 +54,8 @@ public class RestaurantListAdapter extends ListAdapter<Restaurant, RestaurantLis
         public TextView restaurantName;
         public TextView restaurantAdress;
         public TextView restaurantOpeningTime;
+        public TextView restaurantDistance;
+        public TextView numberOfWorkmate;
         public ConstraintLayout restaurantItem;
 
         public ViewHolder(@NonNull View itemView) {
@@ -58,6 +64,8 @@ public class RestaurantListAdapter extends ListAdapter<Restaurant, RestaurantLis
             restaurantName = itemView.findViewById(R.id.restaurant_name);
             restaurantAdress = itemView.findViewById(R.id.restaurant_address);
             restaurantOpeningTime = itemView.findViewById(R.id.restaurant_opening_time);
+            restaurantDistance = itemView.findViewById(R.id.restaurant_distance);
+            numberOfWorkmate = itemView.findViewById(R.id.restaurant_number_of_workmate);
             restaurantItem = (ConstraintLayout) itemView;
         }
     }

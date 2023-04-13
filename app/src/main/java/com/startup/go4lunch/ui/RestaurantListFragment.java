@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.startup.go4lunch.R;
 import com.startup.go4lunch.di.ViewModelFactory;
+import com.startup.go4lunch.model.RestaurantListItem;
 import com.startup.go4lunch.model.Restaurant;
 
 public class RestaurantListFragment extends Fragment implements RestaurantListAdapter.RestaurantListAdapterInterface {
@@ -29,16 +30,11 @@ public class RestaurantListFragment extends Fragment implements RestaurantListAd
         View view = inflater.inflate(R.layout.fragment_list_restaurant, container, false);
         RestaurantListFragmentViewModel viewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(RestaurantListFragmentViewModel.class);
 
-        viewModel.getRestaurantListLiveData().observe(getViewLifecycleOwner(), restaurantList -> restaurantListAdapter.submitList(restaurantList));
-
-        viewModel.getRestaurantListSearchString().observe(getViewLifecycleOwner(), string -> {
-            if (string != null) {
-                restaurantListAdapter.submitList(viewModel.getRestaurantSearchList(string));
-            }
-        });
+        viewModel.getRestaurantListLiveData().observe(getViewLifecycleOwner(), restaurantList -> restaurantListAdapter.submitList(viewModel.getListItemRestaurant()));
+        viewModel.getRestaurantListSearchString().observe(getViewLifecycleOwner(), string -> restaurantListAdapter.submitList(viewModel.getListItemRestaurant()));
 
         restaurantListAdapter = new RestaurantListAdapter(DIFF_CALLBACK, this);
-        restaurantListAdapter.submitList(viewModel.getRestaurantListLiveData().getValue());
+        restaurantListAdapter.submitList(viewModel.getListItemRestaurant());
         RecyclerView recyclerView = view.findViewById(R.id.recyclerview_list_restaurant);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(restaurantListAdapter);
@@ -46,21 +42,19 @@ public class RestaurantListFragment extends Fragment implements RestaurantListAd
         return view;
     }
 
-    public static final DiffUtil.ItemCallback<Restaurant> DIFF_CALLBACK =
-            new DiffUtil.ItemCallback<Restaurant>() {
-                @Override
-                public boolean areItemsTheSame(@NonNull Restaurant oldItem, @NonNull Restaurant newItem) {
-                    return oldItem.getId() == newItem.getId();
-                }
-
-                @Override
-                public boolean areContentsTheSame(@NonNull Restaurant oldItem, @NonNull Restaurant newItem) {
-                    return oldItem.equals(newItem);
-                }
-            };
+    public static final DiffUtil.ItemCallback<RestaurantListItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<RestaurantListItem>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull RestaurantListItem oldItem, @NonNull RestaurantListItem newItem) {
+            return oldItem.getRestaurant().getId() == newItem.getRestaurant().getId();
+        }
+        @Override
+        public boolean areContentsTheSame(@NonNull RestaurantListItem oldItem, @NonNull RestaurantListItem newItem) {
+            return oldItem.equals(newItem);
+        }
+    };
 
     @Override
-    public void clickOnRestaurant(Restaurant restaurant) {
+    public void clickOnRestaurant(@NonNull Restaurant restaurant) {
         Intent intent = new Intent(requireContext(), RestaurantDetailActivity.class);
         intent.putExtra("restaurantId",restaurant.getId());
         ActivityCompat.startActivity(requireActivity(), intent, null);
