@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -17,8 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.startup.go4lunch.R;
 import com.startup.go4lunch.di.ViewModelFactory;
-import com.startup.go4lunch.model.RestaurantListItem;
 import com.startup.go4lunch.model.Restaurant;
+import com.startup.go4lunch.model.RestaurantListItem;
 
 import java.util.List;
 
@@ -37,16 +38,19 @@ public class RestaurantListFragment extends Fragment {
         restaurantListLiveData.observe(getViewLifecycleOwner(), restaurantListObserver);
 
         restaurantListAdapter = new RestaurantListAdapter(DIFF_CALLBACK);
-        restaurantListAdapter.submitList(viewModel.getListItemRestaurant());
+        restaurantListAdapter.submitList(viewModel.getItemRestaurantList());
 
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerview_list_restaurant);
+        RecyclerView recyclerView = view.findViewById(R.id.list_restaurant_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(restaurantListAdapter);
+
+        view.findViewById(R.id.list_restaurant_sort_button).setOnClickListener( v -> new RestaurantListSortDialogFragment().show(getParentFragmentManager(), null));
+        getParentFragmentManager().setFragmentResultListener("SortMethod", this, fragmentResultListener);
 
         return view;
     }
 
-    public static final DiffUtil.ItemCallback<RestaurantListItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<RestaurantListItem>() {
+    private static final DiffUtil.ItemCallback<RestaurantListItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<RestaurantListItem>() {
         @Override
         public boolean areItemsTheSame(@NonNull RestaurantListItem oldItem, @NonNull RestaurantListItem newItem) {
             return oldItem.getRestaurant().getId().equals(newItem.getRestaurant().getId());
@@ -60,8 +64,16 @@ public class RestaurantListFragment extends Fragment {
 
     private final Observer<List<Restaurant>> restaurantListObserver = new Observer<List<Restaurant>>() {
         @Override
-        public void onChanged(List<Restaurant> restaurantListNew) {
-            restaurantListAdapter.submitList(viewModel.getListItemRestaurant());
+        public void onChanged(List<Restaurant> restaurantList) {
+            restaurantListAdapter.submitList(viewModel.getItemRestaurantList());
+        }
+    };
+
+    private final FragmentResultListener fragmentResultListener = new FragmentResultListener() {
+        @Override
+        public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+            viewModel.sortList(result.getInt("SortMethod"));
+            restaurantListAdapter.notifyDataSetChanged();
         }
     };
 }

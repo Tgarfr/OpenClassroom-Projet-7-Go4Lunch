@@ -23,4 +23,8 @@
     <string name="restaurant_list_name">Name</string>
     <string name="restaurant_list_distance">120 m</string>
     <string name="restaurant_list_number_of_workmate">(3)</string>
+    <string name="restaurant_list_sort_by_name">Sort by name</string>
+    <string name="restaurant_list_sort_by_distance">Sort by distance</string>
+    <string name="restaurant_list_sort_by_type">Sort by type</string>
+    <string name="restaurant_list_sort_by_rate">Sort by rate</string>
 </resources>
