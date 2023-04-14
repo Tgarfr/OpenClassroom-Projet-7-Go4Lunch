@@ -3,6 +3,8 @@ package com.startup.go4lunch.model;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.Comparator;
+
 public class RestaurantListItem {
 
     private final Restaurant restaurant;
@@ -54,5 +56,33 @@ public class RestaurantListItem {
         }
         RestaurantListItem restaurantListItem = (RestaurantListItem) obj;
         return restaurant.equals(restaurantListItem.getRestaurant()) && distance == restaurantListItem.getDistance();
+    }
+
+    public static class RestaurantListItemNameComparator implements Comparator<RestaurantListItem> {
+        @Override
+        public int compare(RestaurantListItem o1, RestaurantListItem o2) {
+            return o1.getRestaurant().getName().compareTo(o2.getRestaurant().getName());
+        }
+    }
+
+    public static class RestaurantListItemLocationComparator implements Comparator<RestaurantListItem> {
+        @Override
+        public int compare(RestaurantListItem o1, RestaurantListItem o2) {
+            return o1.getDistance() - o2.getDistance();
+        }
+    }
+
+    public static class RestaurantListItemTypeComparator implements Comparator<RestaurantListItem> {
+        @Override
+        public int compare(RestaurantListItem o1, RestaurantListItem o2) {
+            return o1.getRestaurant().getType().compareTo(o2.getRestaurant().getType());
+        }
+    }
+
+    public static class RestaurantListItemRateComparator implements Comparator<RestaurantListItem> {
+        @Override
+        public int compare(RestaurantListItem o1, RestaurantListItem o2) {
+            return (int) (o1.getScore() - o2.getScore());
+        }
     }
 }
