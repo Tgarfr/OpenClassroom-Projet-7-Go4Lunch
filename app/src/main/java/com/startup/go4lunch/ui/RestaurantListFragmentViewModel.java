@@ -1,30 +1,36 @@
 package com.startup.go4lunch.ui;
 
-import android.location.Location;
-
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import com.startup.go4lunch.model.Restaurant;
-import com.startup.go4lunch.repository.LocationRepository;
 import com.startup.go4lunch.repository.RestaurantRepository;
+import com.startup.go4lunch.repository.SearchRepository;
 
 import java.util.List;
 
 public class RestaurantListFragmentViewModel extends androidx.lifecycle.ViewModel {
 
     private final RestaurantRepository restaurantRepository;
-    private final LocationRepository locationRepository;
+    private final SearchRepository searchRepository;
 
-    public RestaurantListFragmentViewModel(RestaurantRepository restaurantRepository, LocationRepository locationRepository) {
+    public RestaurantListFragmentViewModel(@NonNull RestaurantRepository restaurantRepository,@NonNull SearchRepository searchRepository) {
         this.restaurantRepository = restaurantRepository;
-        this.locationRepository = locationRepository;
+        this.searchRepository = searchRepository;
     }
 
+    @NonNull
     public LiveData<List<Restaurant>> getRestaurantListLiveData() {
         return restaurantRepository.getRestaurantListLiveData();
     }
 
-    public LiveData<Location> getLocationLiveData() {
-        return locationRepository.getLocationLiveData();
+    @NonNull
+    public LiveData<String> getRestaurantListSearchString() {
+        return searchRepository.getRestaurantListFragmentSearchLiveData();
+    }
+
+    @NonNull
+    public List<Restaurant> getRestaurantSearchList(@NonNull String searchString) {
+        return restaurantRepository.getRestaurantListResearchedByString(searchString);
     }
 }

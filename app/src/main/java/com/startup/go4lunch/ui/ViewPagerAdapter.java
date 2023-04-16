@@ -7,24 +7,19 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
 
-    RestaurantListFragment restaurantListFragment;
-    MapFragment mapFragment;
-
-    public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity, MapFragment mapFragment, RestaurantListFragment restaurantListFragment) {
+    public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
-        this.mapFragment = mapFragment;
-        this.restaurantListFragment = restaurantListFragment;
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
         switch (position) {
-            case 0 : return mapFragment;
-            case 1 : return restaurantListFragment;
+            case 0 : return new MapFragment();
+            case 1 : return new RestaurantListFragment();
             case 2 : return new WorkmateFragment();
         }
-        return mapFragment;
+        return new MapFragment();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.startup.go4lunch.model;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class Restaurant {
 
@@ -13,7 +14,7 @@ public class Restaurant {
     private final String openingTime;
 
 
-    public Restaurant(Long id, String name, String type, float latitude, float longitude, String address, String openingTime) {
+    public Restaurant(Long id,@NonNull String name,@Nullable String type, float latitude, float longitude,@Nullable String address,@Nullable String openingTime) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -27,10 +28,12 @@ public class Restaurant {
         return id;
     }
 
+    @NonNull
     public String getName() {
         return name;
     }
 
+    @Nullable
     public String getType() {
         return type;
     }
@@ -43,15 +46,17 @@ public class Restaurant {
         return longitude;
     }
 
+    @Nullable
     public String getAddress() {
         return address;
     }
 
+    @Nullable
     public String getOpeningTime() {
         return openingTime;
     }
 
-
+    @Nullable
     public static Restaurant from(@NonNull OverpassElements overpassElements) {
         if (overpassElements.getTags().getName() != null) {
             long id = overpassElements.getId();

@@ -33,17 +33,22 @@ public class MapFragment extends Fragment {
     private MapView mapView;
     private Context context;
     private LiveData<Location> locationLiveData;
+    private MapFragmentViewModel viewModel;
+    private LiveData<String> searchLiveData;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_map, container, false);
+        viewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(MapFragmentViewModel.class);
 
-        MapFragmentViewModel viewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(MapFragmentViewModel.class);
         locationLiveData = viewModel.getLocationLiveData();
-        locationLiveData.observe(getViewLifecycleOwner(), location -> centerToCurrentLocation());
+        locationLiveData.observe(getViewLifecycleOwner(), location -> updateCenterLocation());
+
         viewModel.getRestaurantListLiveData().observe(getViewLifecycleOwner(), RestaurantListLiveDataObserver);
+
+        searchLiveData = viewModel.getSearchStringLivedata();
+        searchLiveData.observe(getViewLifecycleOwner(), s -> updateCenterLocation() );
 
         context = requireContext();
         Configuration.getInstance().setUserAgentValue(context.getPackageName());
@@ -53,7 +58,10 @@ public class MapFragment extends Fragment {
         mapView.setMultiTouchControls(true);
         mapView.setDestroyMode(false);
 
-        view.findViewById(R.id.map_button).setOnClickListener( v -> centerToCurrentLocation() );
+        view.findViewById(R.id.map_compass_button).setOnClickListener(v -> {
+            viewModel.setEndSearch();
+            updateCenterLocation();
+        });
 
         return view;
     }
@@ -67,15 +75,14 @@ public class MapFragment extends Fragment {
 
     @Override
     public void onPause() {
-        super.onPause();
         Configuration.getInstance().save(context,PreferenceManager.getDefaultSharedPreferences(context));
         mapView.onPause();
+        super.onPause();
     }
 
     Observer<List<Restaurant>> RestaurantListLiveDataObserver = new Observer<List<Restaurant>>() {
         @Override
         public void onChanged(List<Restaurant> restaurantList) {
-
             for (Restaurant restaurant: restaurantList) {
                 Marker marker = new Marker(mapView);
                 marker.setIcon(AppCompatResources.getDrawable(context,R.mipmap.icon_map_restaurant));
@@ -83,14 +90,37 @@ public class MapFragment extends Fragment {
                 marker.setPosition(new GeoPoint(restaurant.getLatitude(),restaurant.getLongitude()));
                 mapView.getOverlays().add(marker);
             }
-            centerToCurrentLocation();
+            updateCenterLocation();
         }
     };
 
-    private void centerToCurrentLocation() {
-        if (locationLiveData.getValue() != null) {
-            mapView.getController().setCenter(new GeoPoint(locationLiveData.getValue().getLatitude(), locationLiveData.getValue().getLongitude()));
+    private void updateCenterLocation() {
+        String search = searchLiveData.getValue();
+        if (search == null) {
+            centerToCurrentLocation();
+        } else {
+            Restaurant searchRestaurant = viewModel.getRestaurantByString(search);
+            if (searchRestaurant != null) {
+                centerToRestaurantLocation(searchRestaurant);
+            } else {
+                centerToCurrentLocation();
+            }
         }
+    }
+
+    private void centerToCurrentLocation() {
+        Location currentLocation = locationLiveData.getValue();
+        if (currentLocation != null) {
+            centerToLocation(currentLocation.getLatitude(), currentLocation.getLongitude());
+        }
+    }
+
+    private void centerToRestaurantLocation(@NonNull Restaurant restaurant) {
+        centerToLocation(restaurant.getLatitude(), restaurant.getLongitude());
+    }
+
+    private void centerToLocation(double latitude, double longitude) {
+        mapView.getController().setCenter(new GeoPoint(latitude, longitude));
     }
 }
 

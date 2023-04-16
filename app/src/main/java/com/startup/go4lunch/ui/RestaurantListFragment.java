@@ -34,6 +34,14 @@ public class RestaurantListFragment extends Fragment {
         LiveData<List<Restaurant>> restaurantListLiveData = viewModel.getRestaurantListLiveData();
         restaurantListLiveData.observe(getViewLifecycleOwner(), restaurantListObserver);
 
+        LiveData<String> restaurantListSearchString = viewModel.getRestaurantListSearchString();
+        restaurantListSearchString.observe(getViewLifecycleOwner(), s -> {
+            String string = viewModel.getRestaurantListSearchString().getValue();
+            if (string != null) {
+                restaurantListAdapter.submitList(viewModel.getRestaurantSearchList(string));
+            }
+        });
+
         restaurantListAdapter = new RestaurantListAdapter(DIFF_CALLBACK);
         restaurantListAdapter.submitList(restaurantListLiveData.getValue());
 
@@ -42,10 +50,6 @@ public class RestaurantListFragment extends Fragment {
         recyclerView.setAdapter(restaurantListAdapter);
 
         return view;
-    }
-
-    public void submitRestaurantList(@NonNull List<Restaurant> restaurantList) {
-        restaurantListAdapter.submitList(restaurantList);
     }
 
     public static final DiffUtil.ItemCallback<Restaurant> DIFF_CALLBACK =
@@ -57,6 +61,14 @@ public class RestaurantListFragment extends Fragment {
 
                 @Override
                 public boolean areContentsTheSame(@NonNull Restaurant oldItem, @NonNull Restaurant newItem) {
+                    if (oldItem.getType() == null) {
+                        if (newItem.getType() == null) {
+                            if (newItem.getType() == null) {
+                                return true;
+                            }
+                            return false;
+                        }
+                    }
                     return oldItem.getName().equals(newItem.getName()) &
                             oldItem.getAddress().equals(newItem.getAddress()) &
                             oldItem.getType().equals(newItem.getType()) &
