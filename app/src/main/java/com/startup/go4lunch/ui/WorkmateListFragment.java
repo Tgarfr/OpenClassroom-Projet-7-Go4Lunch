@@ -27,8 +27,9 @@ public class WorkmateListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_list_workmate, container, false);
         WorkmateListFragmentViewModel viewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(WorkmateListFragmentViewModel.class);
 
-        viewModel.getWorkmateListLiveData().observe(getViewLifecycleOwner(),
-                documentSnapshots -> adapter.submitList(viewModel.getWorkmateListItemList()));
+        viewModel.getWorkmateListLiveData().observe(getViewLifecycleOwner(), workmateList -> adapter.submitList(viewModel.getWorkmateListItemList()));
+
+        viewModel.getWorkmateListSearchStringLiveData().observe(getViewLifecycleOwner(), string -> adapter.submitList(viewModel.getWorkmateListItemList()));
 
         adapter = new WorkmateListAdapter(DIFF_CALLBACK,requireContext());
         adapter.submitList(viewModel.getWorkmateListItemList());

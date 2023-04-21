@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public boolean onQueryTextChange(String newText) {
                 switch (tabLayout.getSelectedTabPosition()) {
                    case 1: viewModel.setRestaurantListSearch(newText); break;
-                   case 2: /* TODO WORKMATE SEARCH */; break;
+                   case 2: viewModel.setWorkmateListSearch(newText); break;
                 }
                 return true;
             }

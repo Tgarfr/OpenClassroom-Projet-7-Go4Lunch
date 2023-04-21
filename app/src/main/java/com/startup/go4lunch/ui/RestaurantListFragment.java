@@ -10,8 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,8 +19,6 @@ import com.startup.go4lunch.R;
 import com.startup.go4lunch.di.ViewModelFactory;
 import com.startup.go4lunch.model.Restaurant;
 
-import java.util.List;
-
 public class RestaurantListFragment extends Fragment implements RestaurantListAdapter.RestaurantListAdapterInterface {
 
     private RestaurantListAdapter restaurantListAdapter;
@@ -31,22 +27,18 @@ public class RestaurantListFragment extends Fragment implements RestaurantListAd
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list_restaurant, container, false);
-
         RestaurantListFragmentViewModel viewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(RestaurantListFragmentViewModel.class);
 
-        LiveData<List<Restaurant>> restaurantListLiveData = viewModel.getRestaurantListLiveData();
-        restaurantListLiveData.observe(getViewLifecycleOwner(), restaurantListObserver);
+        viewModel.getRestaurantListLiveData().observe(getViewLifecycleOwner(), restaurantList -> restaurantListAdapter.submitList(restaurantList));
 
-        LiveData<String> restaurantListSearchString = viewModel.getRestaurantListSearchString();
-        restaurantListSearchString.observe(getViewLifecycleOwner(), string -> {
+        viewModel.getRestaurantListSearchString().observe(getViewLifecycleOwner(), string -> {
             if (string != null) {
                 restaurantListAdapter.submitList(viewModel.getRestaurantSearchList(string));
             }
         });
 
         restaurantListAdapter = new RestaurantListAdapter(DIFF_CALLBACK, this);
-        restaurantListAdapter.submitList(restaurantListLiveData.getValue());
-
+        restaurantListAdapter.submitList(viewModel.getRestaurantListLiveData().getValue());
         RecyclerView recyclerView = view.findViewById(R.id.recyclerview_list_restaurant);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(restaurantListAdapter);
@@ -66,13 +58,6 @@ public class RestaurantListFragment extends Fragment implements RestaurantListAd
                     return oldItem.equals(newItem);
                 }
             };
-
-    private final Observer<List<Restaurant>> restaurantListObserver = new Observer<List<Restaurant>>() {
-        @Override
-        public void onChanged(List<Restaurant> restaurantListNew) {
-            restaurantListAdapter.submitList(restaurantListNew);
-        }
-    };
 
     @Override
     public void clickOnRestaurant(Restaurant restaurant) {

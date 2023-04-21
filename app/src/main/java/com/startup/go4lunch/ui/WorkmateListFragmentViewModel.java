@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 import com.startup.go4lunch.model.Workmate;
 import com.startup.go4lunch.model.WorkmateListItem;
 import com.startup.go4lunch.repository.RestaurantRepository;
+import com.startup.go4lunch.repository.SearchRepository;
 import com.startup.go4lunch.repository.WorkmateRepository;
 
 import java.util.ArrayList;
@@ -15,27 +16,39 @@ import java.util.List;
 public class WorkmateListFragmentViewModel extends ViewModel {
 
     private final RestaurantRepository restaurantRepository;
-    private final LiveData<List<Workmate>> workmateListLiveData;
+    private final WorkmateRepository workmateRepository;
+    private final SearchRepository searchRepository;
 
-    public WorkmateListFragmentViewModel(@NonNull WorkmateRepository workmateRepository,@NonNull RestaurantRepository restaurantRepository) {
+    public WorkmateListFragmentViewModel(@NonNull WorkmateRepository workmateRepository,@NonNull RestaurantRepository restaurantRepository,@NonNull SearchRepository searchRepository) {
         this.restaurantRepository = restaurantRepository;
-        workmateListLiveData = workmateRepository.getWorkmateListLiveData();
+        this.workmateRepository = workmateRepository;
+        this.searchRepository = searchRepository;
     }
 
     @NonNull
     public LiveData<List<Workmate>> getWorkmateListLiveData() {
-        return workmateListLiveData;
+        return workmateRepository.getWorkmateListLiveData();
     }
 
     @NonNull
     public List<WorkmateListItem> getWorkmateListItemList() {
-        List<Workmate> workmateList = workmateListLiveData.getValue();
-        List<WorkmateListItem> workmateListItem = new ArrayList<>();
+        List<Workmate> workmateList;
+        if (searchRepository.getWorkmateListFragmentSearchLiveData().getValue() == null) {
+            workmateList = workmateRepository.getWorkmateListLiveData().getValue();
+        } else {
+            workmateList = workmateRepository.getWorkmateListResearchedByString(searchRepository.getWorkmateListFragmentSearchLiveData().getValue());
+        }
+        List<WorkmateListItem> workmateListItemList = new ArrayList<>();
         if (workmateList != null) {
             for (Workmate workmate: workmateList) {
-                workmateListItem.add(new WorkmateListItem(workmate,restaurantRepository.getRestaurantFromId(workmate.getRestaurantUid())));
+                workmateListItemList.add(new WorkmateListItem(workmate,restaurantRepository.getRestaurantFromId(workmate.getRestaurantUid())));
             }
         }
-        return workmateListItem;
+        return workmateListItemList;
+    }
+
+    @NonNull
+    public LiveData<String> getWorkmateListSearchStringLiveData() {
+        return searchRepository.getWorkmateListFragmentSearchLiveData();
     }
 }

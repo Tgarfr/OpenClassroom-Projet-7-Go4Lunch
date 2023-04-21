@@ -42,6 +42,10 @@ public class MainActivityViewModel extends ViewModel {
         searchRepository.setRestaurantListSearch(searchString);
     }
 
+    public void setWorkmateListSearch(@NonNull String searchString) {
+        searchRepository.setWorkmateListSearch(searchString);
+    }
+
     public void createWorkmate(FirebaseUser firebaseUser) {
         String name = firebaseUser.getDisplayName() != null ? firebaseUser.getDisplayName() : "Name";
         String urlAvatar = firebaseUser.getPhotoUrl() != null ? firebaseUser.getPhotoUrl().toString() : null;
