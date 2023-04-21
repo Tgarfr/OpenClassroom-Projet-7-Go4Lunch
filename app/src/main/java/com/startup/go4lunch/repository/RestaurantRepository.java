@@ -32,12 +32,26 @@ public class RestaurantRepository {
         restaurantApi.fetchLocationNearLocation(location);
     }
 
-    public List<Restaurant> getRestaurantListResearchedByText(String text) {
+    @Nullable
+    public Restaurant getRestaurantFromId(long id) {
+        List<Restaurant> restaurantList = restaurantListLivedata.getValue();
+        if (restaurantList != null) {
+            for (Restaurant restaurant: restaurantList) {
+                if (restaurant.getId() == id) {
+                    return restaurant;
+                }
+            }
+        }
+        return null;
+    }
+
+    @NonNull
+    public List<Restaurant> getRestaurantListResearchedByString(@NonNull String string) {
         List<Restaurant> restaurantList = restaurantApi.getRestaurantListLiveData().getValue();
         List<Restaurant> restaurantListResearched = new ArrayList<>();
         if (restaurantList != null) {
             for (Restaurant restaurant: restaurantList) {
-                if (restaurant.getName().contains(text)) {
+                if (restaurant.getName().toLowerCase().contains(string.toLowerCase())) {
                     restaurantListResearched.add(restaurant);
                 }
             }
@@ -46,11 +60,11 @@ public class RestaurantRepository {
     }
 
     @Nullable
-    public Restaurant getRestaurantFromId(long id) {
-        List<Restaurant> restaurantList = restaurantListLivedata.getValue();
+    public Restaurant getRestaurantResearchedByString(@NonNull String string) {
+        List<Restaurant> restaurantList = restaurantApi.getRestaurantListLiveData().getValue();
         if (restaurantList != null) {
             for (Restaurant restaurant: restaurantList) {
-                if (restaurant.getId() == id) {
+                if (restaurant.getName().toLowerCase().contains(string.toLowerCase())) {
                     return restaurant;
                 }
             }

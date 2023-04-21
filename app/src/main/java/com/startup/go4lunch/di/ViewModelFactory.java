@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.startup.go4lunch.repository.LocationRepository;
 import com.startup.go4lunch.repository.RestaurantRepository;
 import com.startup.go4lunch.repository.WorkmateRepository;
+import com.startup.go4lunch.repository.SearchRepository;
 import com.startup.go4lunch.ui.MainActivityViewModel;
 import com.startup.go4lunch.ui.MapFragmentViewModel;
 import com.startup.go4lunch.ui.RestaurantDetailActivityViewModel;
@@ -17,11 +18,13 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     private static ViewModelFactory factory;
     private final RestaurantRepository restaurantRepository;
     private final LocationRepository locationRepository;
+    private final SearchRepository searchRepository;
     private final WorkmateRepository workmateRepository;
 
     private ViewModelFactory() {
         this.restaurantRepository = Injection.getRestaurantRepository();
         this.locationRepository = new LocationRepository();
+        this.searchRepository = new SearchRepository();
         this.workmateRepository = Injection.getWorkmateRepository();
     }
 
@@ -40,16 +43,16 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     @Override
     public <T extends androidx.lifecycle.ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(MainActivityViewModel.class)) {
-            return (T) new MainActivityViewModel(restaurantRepository,locationRepository,workmateRepository);
+            return (T) new MainActivityViewModel(restaurantRepository,locationRepository,workmateRepository,searchRepository);
+        }
+        if (modelClass.isAssignableFrom(MapFragmentViewModel.class)) {
+            return (T) new MapFragmentViewModel(locationRepository,restaurantRepository,searchRepository);
         }
         if (modelClass.isAssignableFrom(RestaurantListFragmentViewModel.class)) {
-            return (T) new RestaurantListFragmentViewModel(restaurantRepository,locationRepository);
+            return (T) new RestaurantListFragmentViewModel(restaurantRepository,searchRepository);
         }
         if (modelClass.isAssignableFrom(WorkmateListFragmentViewModel.class)) {
             return (T) new WorkmateListFragmentViewModel(workmateRepository, restaurantRepository);
-        }
-        if (modelClass.isAssignableFrom(MapFragmentViewModel.class)) {
-            return (T) new MapFragmentViewModel(locationRepository,restaurantRepository);
         }
         if (modelClass.isAssignableFrom(RestaurantDetailActivityViewModel.class)) {
             return (T) new RestaurantDetailActivityViewModel(restaurantRepository);

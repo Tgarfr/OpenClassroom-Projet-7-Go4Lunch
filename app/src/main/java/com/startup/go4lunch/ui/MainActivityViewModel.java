@@ -5,24 +5,24 @@ import android.location.Location;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 
-import com.startup.go4lunch.model.Restaurant;
 import com.google.firebase.auth.FirebaseUser;
 import com.startup.go4lunch.model.Workmate;
 import com.startup.go4lunch.repository.LocationRepository;
 import com.startup.go4lunch.repository.RestaurantRepository;
+import com.startup.go4lunch.repository.SearchRepository;
 import com.startup.go4lunch.repository.WorkmateRepository;
-
-import java.util.List;
 
 public class MainActivityViewModel extends ViewModel {
 
     private final RestaurantRepository restaurantRepository;
     private final LocationRepository locationRepository;
+    private final SearchRepository searchRepository;
     private final WorkmateRepository workmateRepository;
 
-    public MainActivityViewModel(@NonNull RestaurantRepository restaurantRepository, @NonNull LocationRepository locationRepository, @NonNull WorkmateRepository workmateRepository) {
+    public MainActivityViewModel(@NonNull RestaurantRepository restaurantRepository, @NonNull LocationRepository locationRepository, @NonNull WorkmateRepository workmateRepository, @NonNull SearchRepository searchRepository) {
         this.locationRepository = locationRepository;
         this.restaurantRepository = restaurantRepository;
+        this.searchRepository = searchRepository;
         this.workmateRepository = workmateRepository;
     }
 
@@ -34,9 +34,12 @@ public class MainActivityViewModel extends ViewModel {
         restaurantRepository.updateLocationRestaurantList(location);
     }
 
-    @NonNull
-    public List<Restaurant> searchRestaurantBy(@NonNull String text) {
-        return restaurantRepository.getRestaurantListResearchedByText(text);
+    public void setMapFragmentSearch(@NonNull String searchString) {
+        searchRepository.setMapFragmentSearch(searchString);
+    }
+
+    public void setRestaurantListSearch(@NonNull String searchString) {
+        searchRepository.setRestaurantListSearch(searchString);
     }
 
     public void createWorkmate(FirebaseUser firebaseUser) {

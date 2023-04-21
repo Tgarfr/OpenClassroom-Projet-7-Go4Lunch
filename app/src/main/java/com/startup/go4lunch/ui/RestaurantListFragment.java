@@ -33,8 +33,16 @@ public class RestaurantListFragment extends Fragment implements RestaurantListAd
         View view = inflater.inflate(R.layout.fragment_list_restaurant, container, false);
 
         RestaurantListFragmentViewModel viewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(RestaurantListFragmentViewModel.class);
+
         LiveData<List<Restaurant>> restaurantListLiveData = viewModel.getRestaurantListLiveData();
         restaurantListLiveData.observe(getViewLifecycleOwner(), restaurantListObserver);
+
+        LiveData<String> restaurantListSearchString = viewModel.getRestaurantListSearchString();
+        restaurantListSearchString.observe(getViewLifecycleOwner(), string -> {
+            if (string != null) {
+                restaurantListAdapter.submitList(viewModel.getRestaurantSearchList(string));
+            }
+        });
 
         restaurantListAdapter = new RestaurantListAdapter(DIFF_CALLBACK, this);
         restaurantListAdapter.submitList(restaurantListLiveData.getValue());
@@ -44,10 +52,6 @@ public class RestaurantListFragment extends Fragment implements RestaurantListAd
         recyclerView.setAdapter(restaurantListAdapter);
 
         return view;
-    }
-
-    public void submitRestaurantList(@NonNull List<Restaurant> restaurantList) {
-        restaurantListAdapter.submitList(restaurantList);
     }
 
     public static final DiffUtil.ItemCallback<Restaurant> DIFF_CALLBACK =

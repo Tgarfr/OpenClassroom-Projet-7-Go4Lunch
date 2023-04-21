@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -41,10 +42,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.startup.go4lunch.di.ViewModelFactory;
-import com.startup.go4lunch.model.Restaurant;
 import com.startup.go4lunch.ui.MainActivityViewModel;
-import com.startup.go4lunch.ui.MapFragment;
-import com.startup.go4lunch.ui.RestaurantListFragment;
 import com.startup.go4lunch.ui.ViewPagerAdapter;
 
 import java.util.Arrays;
@@ -59,8 +57,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private TabLayout tabLayout;
-    private final MapFragment mapFragment = new MapFragment();
-    private final RestaurantListFragment restaurantListFragment = new RestaurantListFragment();
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,55 +83,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getMenuInflater().inflate(R.menu.activity_main_menu_search, menu);
         MenuItem menuItem = menu.findItem(R.id.action_search);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        final SearchView searchView = (SearchView) menuItem.getActionView();
+        searchView = (SearchView) menuItem.getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(true);
-        searchView.setBackgroundColor(getResources().getColor(com.firebase.ui.auth.R.color.design_default_color_on_primary));
-
-        menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
-                switch (tabLayout.getSelectedTabPosition()) {
-                    case 0 :
-                    case 1 :
-                        searchView.setQueryHint(getString(R.string.search_menu_restaurant)); break;
-                    case 2: searchView.setQueryHint(getString(R.string.search_menu_workmate)); break;
-                }
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
-                return true;
-            }
-        });
-
+        EditText editText = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
+        editText.setBackgroundColor(getResources().getColor(R.color.white));
+        editText.setTextColor(getResources().getColor(R.color.black));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                return false;
+                if (tabLayout.getSelectedTabPosition() == 0) {
+                    viewModel.setMapFragmentSearch(query);
+                }
+                return true;
             }
-
             @Override
             public boolean onQueryTextChange(String newText) {
                 switch (tabLayout.getSelectedTabPosition()) {
-                    case 1: searchRestaurant(newText); break;
-                    case 2: searchWorkmmate(newText); break;
+                   case 1: viewModel.setRestaurantListSearch(newText); break;
+                   case 2: /* TODO WORKMATE SEARCH */; break;
                 }
-                return false;
+                return true;
             }
         });
-
         return true;
-    }
-
-    private void searchRestaurant(String text) {
-        List<Restaurant> restaurantList = viewModel.searchRestaurantBy(text);
-        restaurantListFragment.submitRestaurantList(restaurantList);
-    }
-
-    private void searchWorkmmate(String text) {
-        // TODO
     }
 
     private void verifyFirebaseUser() {
@@ -204,8 +176,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void configureViewPager() {
         ViewPager2 viewPager = findViewById(R.id.view_pager);
         tabLayout = findViewById(R.id.menu);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (searchView != null) {
+                    switch (tabLayout.getSelectedTabPosition()) {
+                        case 0 :
+                        case 1 : searchView.setQueryHint(getString(R.string.search_menu_restaurant)); break;
+                        case 2 : searchView.setQueryHint(getString(R.string.search_menu_workmate)); break;
+                    }
+                }
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {}
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
 
-        viewPager.setAdapter(new ViewPagerAdapter(this, mapFragment, restaurantListFragment));
+        viewPager.setAdapter(new ViewPagerAdapter(this));
 
         TabLayoutMediator.TabConfigurationStrategy tabConfigurationStrategy = (tab, position) -> {
             switch (position) {
@@ -232,9 +220,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void configureDrawerLayout() {
         this.drawerLayout = findViewById(R.id.activity_main_drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
     }
 
     private void configureNavigationView() {
