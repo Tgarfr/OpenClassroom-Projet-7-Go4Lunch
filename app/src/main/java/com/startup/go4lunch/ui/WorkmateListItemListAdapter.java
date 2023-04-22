@@ -20,12 +20,12 @@ import com.startup.go4lunch.model.Restaurant;
 import com.startup.go4lunch.model.Workmate;
 import com.startup.go4lunch.model.WorkmateListItem;
 
-public class WorkmateListAdapter extends ListAdapter<WorkmateListItem, WorkmateListAdapter.ViewHolder> {
+public class WorkmateListItemListAdapter extends ListAdapter<WorkmateListItem, WorkmateListItemListAdapter.ViewHolder> {
 
     Context context;
     Resources resources;
 
-    protected WorkmateListAdapter(@NonNull DiffUtil.ItemCallback<WorkmateListItem> diffCallback, Context context) {
+    protected WorkmateListItemListAdapter(@NonNull DiffUtil.ItemCallback<WorkmateListItem> diffCallback, Context context) {
         super(diffCallback);
         this.context = context;
         this.resources = context.getResources();
@@ -53,10 +53,19 @@ public class WorkmateListAdapter extends ListAdapter<WorkmateListItem, WorkmateL
         } else {
             holder.workmateAvatar.setImageResource(R.drawable.icon_workmate_avatar_50);
         }
-        if (restaurantChoice != null) {
-           holder.workmateText.setText(String.format(resources.getString(R.string.workmate_list_item_text),workmate.getName(),restaurantChoice.getType(),restaurantChoice.getName()));
-        } else {
-            holder.workmateText.setText(String.format(resources.getString(R.string.workmate_list_item_text_no_restaurant_choice), workmate.getName()));
+
+        switch (workmateListItem.getDisplayTextType()) {
+            case WorkmateListItem.DISPLAY_TEXTE_EATING :
+                if (restaurantChoice != null) {
+                    holder.workmateText.setText(String.format(resources.getString(R.string.workmate_list_item_text_eating), workmate.getName(), restaurantChoice.getType(), restaurantChoice.getName()));
+                    break;
+                }
+            case WorkmateListItem.DISPLAY_TEXTE_NOT_DECIDED:
+                holder.workmateText.setText(String.format(resources.getString(R.string.workmate_list_item_text_not_decided), workmate.getName()));
+                break ;
+            case WorkmateListItem.DISPLAY_TEXTE_JOINING:
+                holder.workmateText.setText(String.format(resources.getString(R.string.workmate_list_item_text_joining), workmate.getName()));
+                break ;
         }
     }
 

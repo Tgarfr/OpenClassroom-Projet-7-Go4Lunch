@@ -21,6 +21,7 @@
 
     // Restaurant Detail
     <string name="restaurant_detail_restaurant_name">Restaurant Name</string>
+    <string name="restaurant_picture">Restaurant picture</string>
     <string name="restaurant_detail_description_of_the_restaurant">Description of the restaurant</string>
     <string name="restaurant_detail_valid_button">Valid button</string>
     <string name="restaurant_detail_workmate_list_avatar">Workmate_avatar</string>
@@ -43,8 +44,9 @@
     // Workmate List
     <string name="workmate_list_avatar">Avatar</string>
     <string name="workmate_list_text_example">WorkmateName is eating french (Restaurant Example)</string>
-    <string name="workmate_list_item_text">%s is eating %s ( %s )</string>
-    <string name="workmate_list_item_text_no_restaurant_choice">%s hasn\'t decided yet</string>
+    <string name="workmate_list_item_text_eating">%s is eating %s ( %s )</string>
+    <string name="workmate_list_item_text_not_decided">%s hasn\'t decided yet</string>
+    <string name="workmate_list_item_text_joining">%s is joining!</string>
 
     // Search menu
     <string name="search_menu">Search menu</string>

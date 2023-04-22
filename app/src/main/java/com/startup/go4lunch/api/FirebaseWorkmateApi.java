@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.startup.go4lunch.model.RestaurantWorkmateVote;
 import com.startup.go4lunch.model.Workmate;
 
@@ -31,7 +32,12 @@ public class FirebaseWorkmateApi implements WorkmateApi {
 
     @Override
     public void createWorkmate(@NonNull Workmate workmate) {
-        collectionWorkmates.document(workmate.getUid()).set(workmate);
+        collectionWorkmates.document(workmate.getUid()).set(workmate, SetOptions.mergeFields("name","avatarUri"));
+    }
+
+    @Override
+    public void setWorkmateRestaurantSelectedUid(@NonNull String workmateUid, long restaurantUid) {
+        collectionWorkmates.document(workmateUid).update("restaurantSelectedUid",restaurantUid);
     }
 
     @NonNull

@@ -8,11 +8,15 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    // Application
     <color name="primary_color">#EF5555</color>
     <color name="on_primary_color">@color/white</color>
     <color name="primary_color_variant">#F46D6D</color>
-    <color name="text_menu">#FFFFFFFF</color>>
+    <color name="text_menu">#FFFFFFFF</color>
 
-    // Detail Restaurant Activity
+    // Detail activity
+    <color name="detail_activity_dividing_bar">#E3E3E3</color>
+    <color name="detail_activity_valid_button_green">#9AF78C</color>
     <color name="detail_restaurant_activity_item_disable">#CDCBCB</color>
+
 </resources>
