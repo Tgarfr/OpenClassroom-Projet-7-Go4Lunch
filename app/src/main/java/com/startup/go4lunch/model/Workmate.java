@@ -9,17 +9,16 @@ public class Workmate {
 
     private String uid;
     private String name;
-
     private String avatarUri;
-    private long restaurantUid;
+    private long restaurantSelectedUid;
 
     public Workmate() {}
 
-    public Workmate(@NonNull String uid, @NonNull String name, @Nullable String avatarUri,long restaurantUid) {
+    public Workmate(@NonNull String uid, @NonNull String name, @Nullable String avatarUri,long restaurantSelectedUid) {
         this.uid = uid;
         this.name = name;
         this.avatarUri = avatarUri;
-        this.restaurantUid = restaurantUid;
+        this.restaurantSelectedUid = restaurantSelectedUid;
     }
 
     @NonNull
@@ -37,8 +36,8 @@ public class Workmate {
         return avatarUri;
     }
 
-    public long getRestaurantUid() {
-        return restaurantUid;
+    public long getRestaurantSelectedUid() {
+        return restaurantSelectedUid;
     }
 
     @Override
@@ -53,6 +52,6 @@ public class Workmate {
         return workmate.getUid().equals(getUid()) &&
                 workmate.getName().equals(getName()) &&
                 Objects.equals(workmate.getAvatarUri(), getAvatarUri()) &&
-                workmate.getRestaurantUid() == getRestaurantUid();
+                workmate.getRestaurantSelectedUid() == getRestaurantSelectedUid();
     }
 }

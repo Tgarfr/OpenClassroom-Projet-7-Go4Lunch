@@ -42,8 +42,8 @@ public class MapFragmentViewModel extends ViewModel {
     }
 
     @Nullable
-    public Restaurant getRestaurantByString(@NonNull String string) {
-        return restaurantRepository.getRestaurantResearchedByString(string);
+    public Restaurant getRestaurantFromString(@NonNull String string) {
+        return restaurantRepository.getRestaurantResearchedFromString(string);
     }
 
     public void setEndSearch() {

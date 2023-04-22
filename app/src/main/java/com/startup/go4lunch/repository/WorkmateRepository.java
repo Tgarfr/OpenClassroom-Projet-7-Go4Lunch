@@ -15,16 +15,18 @@ import java.util.Objects;
 public class WorkmateRepository {
 
     private final WorkmateApi workmateApi;
+    private final LiveData<List<Workmate>> workmateListLiveData;
     private final LiveData<List<RestaurantWorkmateVote>> restaurantWorkmateVoteListLivedata;
 
     public WorkmateRepository(@NonNull WorkmateApi workmateApi) {
         this.workmateApi = workmateApi;
+        workmateListLiveData = workmateApi.getWorkmateListLiveData();
         restaurantWorkmateVoteListLivedata = workmateApi.getRestaurantWorkmateVoteListLiveData();
     }
 
     @NonNull
     public LiveData<List<Workmate>> getWorkmateListLiveData() {
-        return workmateApi.getWorkmateListLiveData();
+        return workmateListLiveData;
     }
 
     @NonNull
@@ -38,7 +40,7 @@ public class WorkmateRepository {
 
     @Nullable
     public Workmate getWorkmateFromUid(@NonNull String workmateUidSearched) {
-        List<Workmate> workmateList = workmateApi.getWorkmateListLiveData().getValue();
+        List<Workmate> workmateList = workmateListLiveData.getValue();
         if (workmateList != null) {
             for (Workmate workmate: workmateList) {
                 if (workmate.getUid().equals(workmateUidSearched))
@@ -49,8 +51,8 @@ public class WorkmateRepository {
     }
 
     @NonNull
-    public List<Workmate> getWorkmateListResearchedByString(@NonNull String string) {
-        List<Workmate> workmateList = workmateApi.getWorkmateListLiveData().getValue();
+    public List<Workmate> getWorkmateListResearchedFromString(@NonNull String string) {
+        List<Workmate> workmateList = workmateListLiveData.getValue();
         List<Workmate> workmateListResearched = new ArrayList<>();
         if (workmateList != null) {
             for (Workmate workmate: workmateList) {
@@ -60,6 +62,24 @@ public class WorkmateRepository {
             }
         }
         return workmateListResearched;
+    }
+
+    @NonNull
+    public List<Workmate> getWorkmateListFromRestaurant(long restaurantUid) {
+        List<Workmate> workmateList = workmateListLiveData.getValue();
+        List<Workmate> workmateListResearched = new ArrayList<>();
+        if (workmateList != null) {
+            for (Workmate workmate: workmateList) {
+                if (workmate.getRestaurantSelectedUid() == restaurantUid) {
+                    workmateListResearched.add(workmate);
+                }
+            }
+        }
+        return workmateListResearched;
+    }
+
+    public void setRestaurantSelectedToWorkmate(@NonNull String workmateUid,@NonNull Long restaurantSelectedUid) {
+        workmateApi.setWorkmateRestaurantSelectedUid(workmateUid, restaurantSelectedUid);
     }
 
     public void createRestaurantWorkmateVote(@NonNull String workmateUid, long restaurantUid) {

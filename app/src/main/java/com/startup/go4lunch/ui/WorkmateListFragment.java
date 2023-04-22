@@ -19,7 +19,7 @@ import com.startup.go4lunch.model.WorkmateListItem;
 
 public class WorkmateListFragment extends Fragment {
 
-    private WorkmateListAdapter adapter;
+    private WorkmateListItemListAdapter adapter;
 
     @Nullable
     @Override
@@ -31,7 +31,7 @@ public class WorkmateListFragment extends Fragment {
 
         viewModel.getWorkmateListSearchStringLiveData().observe(getViewLifecycleOwner(), string -> adapter.submitList(viewModel.getWorkmateListItemList()));
 
-        adapter = new WorkmateListAdapter(DIFF_CALLBACK,requireContext());
+        adapter = new WorkmateListItemListAdapter(DIFF_CALLBACK,requireContext());
         adapter.submitList(viewModel.getWorkmateListItemList());
         RecyclerView recyclerView = view.findViewById(R.id.recyclerview_list_workmate);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

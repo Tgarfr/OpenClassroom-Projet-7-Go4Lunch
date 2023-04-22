@@ -103,7 +103,7 @@ public class MapFragment extends Fragment {
         if (search == null) {
             centerToCurrentLocation();
         } else {
-            Restaurant searchRestaurant = viewModel.getRestaurantByString(search);
+            Restaurant searchRestaurant = viewModel.getRestaurantFromString(search);
             if (searchRestaurant != null) {
                 centerToRestaurantLocation(searchRestaurant);
             } else {

@@ -41,7 +41,7 @@ public class RestaurantListFragmentViewModel extends androidx.lifecycle.ViewMode
     }
 
     public List<RestaurantListItem> getListItemRestaurant() {
-        List<Restaurant> restaurantList = restaurantRepository.getRestaurantListResearchedByString(searchRepository.getRestaurantListFragmentSearchLiveData().getValue());
+        List<Restaurant> restaurantList = restaurantRepository.getRestaurantListResearchedFromString(searchRepository.getRestaurantListFragmentSearchLiveData().getValue());
         Location location = locationRepository.getLocationLiveData().getValue();
         restaurantListItem = new ArrayList<>();
         for (Restaurant restaurant : restaurantList) {
