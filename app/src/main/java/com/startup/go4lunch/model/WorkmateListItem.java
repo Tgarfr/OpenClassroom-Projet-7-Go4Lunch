@@ -8,10 +8,15 @@ public class WorkmateListItem {
     private final Workmate workmate;
 
     private final Restaurant restaurantChoice;
+    private final int displayTextType;
+    public static final int DISPLAY_TEXTE_EATING = 1;
+    public static final int DISPLAY_TEXTE_NOT_DECIDED = 2;
+    public static final int DISPLAY_TEXTE_JOINING = 3;
 
-    public WorkmateListItem(@NonNull Workmate workmate, @Nullable Restaurant restaurantChoice) {
+    public WorkmateListItem(@NonNull Workmate workmate, @Nullable Restaurant restaurantChoice, int displayTextType) {
         this.workmate = workmate;
         this.restaurantChoice = restaurantChoice;
+        this.displayTextType = displayTextType;
     }
 
     @NonNull
@@ -22,6 +27,10 @@ public class WorkmateListItem {
     @Nullable
     public Restaurant getRestaurantChoice() {
         return restaurantChoice;
+    }
+
+    public int getDisplayTextType() {
+        return displayTextType;
     }
 
     @Override

@@ -46,7 +46,7 @@ public class RestaurantRepository {
     }
 
     @NonNull
-    public List<Restaurant> getRestaurantListResearchedByString(@Nullable String string) {
+    public List<Restaurant> getRestaurantListResearchedFromString(@Nullable String string) {
         List<Restaurant> restaurantList = restaurantApi.getRestaurantListLiveData().getValue();
         if (restaurantList != null) {
             if (string == null) {
@@ -64,7 +64,7 @@ public class RestaurantRepository {
     }
 
     @Nullable
-    public Restaurant getRestaurantResearchedByString(@NonNull String string) {
+    public Restaurant getRestaurantResearchedFromString(@NonNull String string) {
         List<Restaurant> restaurantList = restaurantApi.getRestaurantListLiveData().getValue();
         if (restaurantList != null) {
             for (Restaurant restaurant: restaurantList) {

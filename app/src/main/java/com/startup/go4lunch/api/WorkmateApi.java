@@ -15,6 +15,8 @@ public interface WorkmateApi {
 
     void createWorkmate(@NonNull Workmate workmate);
 
+    void setWorkmateRestaurantSelectedUid(@NonNull String workmateUid, long restaurantUid);
+
     @NonNull
     LiveData<List<RestaurantWorkmateVote>> getRestaurantWorkmateVoteListLiveData();
 

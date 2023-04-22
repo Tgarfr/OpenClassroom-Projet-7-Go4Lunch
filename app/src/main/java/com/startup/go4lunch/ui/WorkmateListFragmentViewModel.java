@@ -36,12 +36,18 @@ public class WorkmateListFragmentViewModel extends ViewModel {
         if (searchRepository.getWorkmateListFragmentSearchLiveData().getValue() == null) {
             workmateList = workmateRepository.getWorkmateListLiveData().getValue();
         } else {
-            workmateList = workmateRepository.getWorkmateListResearchedByString(searchRepository.getWorkmateListFragmentSearchLiveData().getValue());
+            workmateList = workmateRepository.getWorkmateListResearchedFromString(searchRepository.getWorkmateListFragmentSearchLiveData().getValue());
         }
         List<WorkmateListItem> workmateListItemList = new ArrayList<>();
         if (workmateList != null) {
             for (Workmate workmate: workmateList) {
-                workmateListItemList.add(new WorkmateListItem(workmate,restaurantRepository.getRestaurantFromId(workmate.getRestaurantUid())));
+                int displayTextType;
+                if (workmate.getRestaurantSelectedUid() == 0) {
+                    displayTextType = WorkmateListItem.DISPLAY_TEXTE_NOT_DECIDED;
+                } else {
+                    displayTextType = WorkmateListItem.DISPLAY_TEXTE_EATING;
+                }
+                workmateListItemList.add(new WorkmateListItem(workmate,restaurantRepository.getRestaurantFromId(workmate.getRestaurantSelectedUid()), displayTextType));
             }
         }
         return workmateListItemList;

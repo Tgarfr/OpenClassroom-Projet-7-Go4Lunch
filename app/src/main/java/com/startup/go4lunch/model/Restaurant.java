@@ -17,7 +17,7 @@ public class Restaurant {
     private final String phone;
     private final String website;
 
-    public Restaurant(Long id,@NonNull String name,@Nullable String type, float latitude, float longitude,@Nullable String address,@Nullable String openingTime,@Nullable String phone,@Nullable String website) {
+    public Restaurant(long id, @NonNull String name, @Nullable String type, float latitude, float longitude, @Nullable String address, @Nullable String openingTime, @Nullable String phone, @Nullable String website) {
         this.id = id;
         this.name = name;
         this.type = type;
