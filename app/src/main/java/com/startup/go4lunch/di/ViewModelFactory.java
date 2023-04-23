@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.startup.go4lunch.repository.LocationRepository;
 import com.startup.go4lunch.repository.RestaurantRepository;
-import com.startup.go4lunch.repository.WorkmateRepository;
 import com.startup.go4lunch.repository.SearchRepository;
+import com.startup.go4lunch.repository.WorkmateRepository;
 import com.startup.go4lunch.ui.MainActivityViewModel;
 import com.startup.go4lunch.ui.MapFragmentViewModel;
 import com.startup.go4lunch.ui.RestaurantDetailActivityViewModel;
@@ -55,7 +55,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             return (T) new WorkmateListFragmentViewModel(workmateRepository, restaurantRepository, searchRepository);
         }
         if (modelClass.isAssignableFrom(RestaurantDetailActivityViewModel.class)) {
-            return (T) new RestaurantDetailActivityViewModel(restaurantRepository);
+            return (T) new RestaurantDetailActivityViewModel(restaurantRepository, workmateRepository);
         }
         throw new IllegalArgumentException("Unknown ViewModel class");
     }

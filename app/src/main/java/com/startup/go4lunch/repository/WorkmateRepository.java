@@ -1,20 +1,25 @@
 package com.startup.go4lunch.repository;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 
 import com.startup.go4lunch.api.WorkmateApi;
+import com.startup.go4lunch.model.RestaurantWorkmateVote;
 import com.startup.go4lunch.model.Workmate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class WorkmateRepository {
 
-    WorkmateApi workmateApi;
+    private final WorkmateApi workmateApi;
+    private final LiveData<List<RestaurantWorkmateVote>> restaurantWorkmateVoteListLivedata;
 
     public WorkmateRepository(@NonNull WorkmateApi workmateApi) {
         this.workmateApi = workmateApi;
+        restaurantWorkmateVoteListLivedata = workmateApi.getRestaurantWorkmateVoteListLiveData();
     }
 
     @NonNull
@@ -22,8 +27,25 @@ public class WorkmateRepository {
         return workmateApi.getWorkmateListLiveData();
     }
 
+    @NonNull
+    public LiveData<List<RestaurantWorkmateVote>> getRestaurantWorkmateVoteListLiveData() {
+        return restaurantWorkmateVoteListLivedata;
+    }
+
     public void createWorkmate(@NonNull Workmate workmate) {
         workmateApi.createWorkmate(workmate);
+    }
+
+    @Nullable
+    public Workmate getWorkmateFromUid(@NonNull String workmateUidSearched) {
+        List<Workmate> workmateList = workmateApi.getWorkmateListLiveData().getValue();
+        if (workmateList != null) {
+            for (Workmate workmate: workmateList) {
+                if (workmate.getUid().equals(workmateUidSearched))
+                    return workmate;
+            }
+        }
+        return null;
     }
 
     @NonNull
@@ -38,5 +60,29 @@ public class WorkmateRepository {
             }
         }
         return workmateListResearched;
+    }
+
+    public void createRestaurantWorkmateVote(@NonNull String workmateUid, long restaurantUid) {
+        if (!getRestaurantWorkmateVote(workmateUid,restaurantUid)) {
+            workmateApi.createRestaurantWorkmateVote(new RestaurantWorkmateVote(workmateUid, restaurantUid));
+        }
+    }
+
+    public void removeRestaurantWorkmateVote(@NonNull String workmateUid, long restaurantUid) {
+        if (getRestaurantWorkmateVote(workmateUid,restaurantUid)) {
+            workmateApi.removeRestaurantWorkmateVote(new RestaurantWorkmateVote(workmateUid, restaurantUid));
+        }
+    }
+
+    public boolean getRestaurantWorkmateVote(@NonNull String workmateUid, long restaurantUid) {
+        List<RestaurantWorkmateVote> restaurantWorkmateVoteList = restaurantWorkmateVoteListLivedata.getValue();
+        if (restaurantWorkmateVoteList != null) {
+            for (RestaurantWorkmateVote restaurantWorkmateVote : restaurantWorkmateVoteListLivedata.getValue()) {
+                if (Objects.equals(restaurantWorkmateVote.getWorkmateUid(), workmateUid) & restaurantWorkmateVote.getRestaurantUid() == restaurantUid) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
