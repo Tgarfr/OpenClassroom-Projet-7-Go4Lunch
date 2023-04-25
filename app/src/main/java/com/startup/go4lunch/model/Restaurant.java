@@ -77,6 +77,12 @@ public class Restaurant {
             long id = overpassElements.getId();
             String name = overpassElements.getTags().getName();
             String type = overpassElements.getTags().getCuisine();
+            if (type != null) {
+                int positionSeparator = type.indexOf(";");
+                if (positionSeparator > 0) {
+                    type = type.substring(0, positionSeparator);
+                }
+            }
             float latitude = overpassElements.getLat();
             float longitude = overpassElements.getLon();
             String phone = overpassElements.getTags().getPhone();

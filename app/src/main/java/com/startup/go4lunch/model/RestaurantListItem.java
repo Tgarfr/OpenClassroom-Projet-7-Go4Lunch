@@ -75,6 +75,15 @@ public class RestaurantListItem {
     public static class RestaurantListItemTypeComparator implements Comparator<RestaurantListItem> {
         @Override
         public int compare(RestaurantListItem o1, RestaurantListItem o2) {
+            if (o1.getRestaurant().getType() == null & o2.getRestaurant().getType() == null) {
+                return 0;
+            }
+            if (o1.getRestaurant().getType() == null) {
+                return 1;
+            }
+            if (o2.getRestaurant().getType() == null) {
+                return -1;
+            }
             return o1.getRestaurant().getType().compareTo(o2.getRestaurant().getType());
         }
     }

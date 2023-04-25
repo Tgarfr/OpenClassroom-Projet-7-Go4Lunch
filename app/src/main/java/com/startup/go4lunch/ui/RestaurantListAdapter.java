@@ -42,7 +42,7 @@ public class RestaurantListAdapter extends ListAdapter<RestaurantListItem, Resta
         Restaurant restaurant = restaurantListItem.getRestaurant();
 
         holder.restaurantName.setText(restaurant.getName());
-        holder.restaurantAdress.setText(restaurant.getAddress());
+        holder.restaurantAdress.setText(String.format("%s - %s",restaurant.getType(),restaurant.getAddress()));
         holder.restaurantOpeningTime.setText(restaurant.getOpeningTime());
         holder.restaurantDistance.setText(String.format("%sm",restaurantListItem.getDistance()));
         holder.numberOfWorkmate.setText(String.format("(%s)",restaurantListItem.getNumberOfWorkmate()));
