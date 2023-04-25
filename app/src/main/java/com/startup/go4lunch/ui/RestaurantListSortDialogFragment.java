@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.startup.go4lunch.R;
+import com.startup.go4lunch.model.RestaurantListItem;
 
 public class RestaurantListSortDialogFragment extends DialogFragment {
 
@@ -19,10 +20,10 @@ public class RestaurantListSortDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view = getLayoutInflater().inflate(R.layout.dialog_fragment_list_restaurant, null);
 
-        view.findViewById(R.id.restaurant_list_sort_by_name).setOnClickListener(v -> returnSortMethod(0));
-        view.findViewById(R.id.restaurant_list_sort_by_distance).setOnClickListener(v -> returnSortMethod(1));
-        view.findViewById(R.id.restaurant_list_sort_by_type).setOnClickListener(v -> returnSortMethod(2));
-        view.findViewById(R.id.restaurant_list_sort_by_rate).setOnClickListener(v -> returnSortMethod(3));
+        view.findViewById(R.id.restaurant_list_sort_by_name).setOnClickListener(v -> returnSortMethod(RestaurantListItem.SORT_BY_NAME));
+        view.findViewById(R.id.restaurant_list_sort_by_distance).setOnClickListener(v -> returnSortMethod(RestaurantListItem.SORT_BY_DISTANCE));
+        view.findViewById(R.id.restaurant_list_sort_by_type).setOnClickListener(v -> returnSortMethod(RestaurantListItem.SORT_BY_TYPE));
+        view.findViewById(R.id.restaurant_list_sort_by_note).setOnClickListener(v -> returnSortMethod(RestaurantListItem.SORT_BY_NOTE));
 
         builder.setView(view);
         return builder.create();

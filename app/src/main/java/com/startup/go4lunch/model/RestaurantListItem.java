@@ -11,6 +11,10 @@ public class RestaurantListItem {
     private int distance;
     private short numberOfWorkmate;
     private float score;
+    public static final int SORT_BY_NAME = 1;
+    public static final int SORT_BY_DISTANCE = 2;
+    public static final int SORT_BY_TYPE = 3;
+    public static final int SORT_BY_NOTE = 4;
 
     public RestaurantListItem(@NonNull Restaurant restaurant, int distance, short numberOfWorkmate, float score) {
         this.restaurant = restaurant;
@@ -65,7 +69,7 @@ public class RestaurantListItem {
         }
     }
 
-    public static class RestaurantListItemLocationComparator implements Comparator<RestaurantListItem> {
+    public static class RestaurantListItemDistanceComparator implements Comparator<RestaurantListItem> {
         @Override
         public int compare(RestaurantListItem o1, RestaurantListItem o2) {
             return o1.getDistance() - o2.getDistance();

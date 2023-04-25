@@ -21,7 +21,7 @@ public class RestaurantListFragmentViewModel extends androidx.lifecycle.ViewMode
     private final SearchRepository searchRepository;
     private final LocationRepository locationRepository;
     private List<RestaurantListItem> restaurantListItem;
-    int sortMethod = 0;
+    int sortMethod = RestaurantListItem.SORT_BY_NAME;
 
     public RestaurantListFragmentViewModel(@NonNull RestaurantRepository restaurantRepository, @NonNull SearchRepository searchRepository, @NonNull LocationRepository locationRepository) {
         this.restaurantRepository = restaurantRepository;
@@ -62,16 +62,16 @@ public class RestaurantListFragmentViewModel extends androidx.lifecycle.ViewMode
 
     public void sortList(int sortMethod) {
         switch (sortMethod) {
-            case 0:
+            case RestaurantListItem.SORT_BY_NAME:
                 Collections.sort(restaurantListItem, new RestaurantListItem.RestaurantListItemNameComparator());
                 break;
-            case 1:
-                Collections.sort(restaurantListItem, new RestaurantListItem.RestaurantListItemLocationComparator());
+            case RestaurantListItem.SORT_BY_DISTANCE:
+                Collections.sort(restaurantListItem, new RestaurantListItem.RestaurantListItemDistanceComparator());
                 break;
-            case 2:
+            case RestaurantListItem.SORT_BY_TYPE:
                 Collections.sort(restaurantListItem, new RestaurantListItem.RestaurantListItemTypeComparator());
                 break;
-            case 3:
+            case RestaurantListItem.SORT_BY_NOTE:
                 Collections.sort(restaurantListItem, new RestaurantListItem.RestaurantListItemRateComparator());
                 break;
         }
