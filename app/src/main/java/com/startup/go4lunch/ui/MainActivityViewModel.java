@@ -52,4 +52,12 @@ public class MainActivityViewModel extends ViewModel {
         Workmate workmate = new Workmate(firebaseUser.getUid(), name,urlAvatar, 0);
         workmateRepository.createWorkmate(workmate);
     }
+
+    public long getWorkmateRestaurantSelectedUid(@NonNull String workmateUid) {
+        Workmate workmate = workmateRepository.getWorkmateFromUid(workmateUid);
+        if (workmate != null) {
+            return workmate.getRestaurantSelectedUid();
+        }
+        return 0;
+    }
 }
