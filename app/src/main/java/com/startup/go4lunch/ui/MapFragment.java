@@ -1,6 +1,7 @@
 package com.startup.go4lunch.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -30,10 +32,10 @@ import java.util.List;
 
 public class MapFragment extends Fragment {
 
-    private MapView mapView;
     private Context context;
-    private LiveData<Location> locationLiveData;
     private MapFragmentViewModel viewModel;
+    private MapView mapView;
+    private LiveData<Location> locationLiveData;
     private LiveData<String> searchLiveData;
 
     @Nullable
@@ -41,6 +43,7 @@ public class MapFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         viewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(MapFragmentViewModel.class);
+        context = requireContext();
 
         locationLiveData = viewModel.getLocationLiveData();
         locationLiveData.observe(getViewLifecycleOwner(), location -> updateCenterLocation());
@@ -50,7 +53,6 @@ public class MapFragment extends Fragment {
         searchLiveData = viewModel.getSearchStringLivedata();
         searchLiveData.observe(getViewLifecycleOwner(), s -> updateCenterLocation() );
 
-        context = requireContext();
         Configuration.getInstance().setUserAgentValue(context.getPackageName());
         mapView = view.findViewById(R.id.map_view);
         mapView.setTileSource(TileSourceFactory.MAPNIK);
@@ -88,6 +90,8 @@ public class MapFragment extends Fragment {
                 marker.setIcon(AppCompatResources.getDrawable(context,R.mipmap.icon_map_restaurant));
                 marker.setTitle(restaurant.getName());
                 marker.setPosition(new GeoPoint(restaurant.getLatitude(),restaurant.getLongitude()));
+                marker.setRelatedObject(restaurant.getId());
+                marker.setOnMarkerClickListener(onMarkerClickListener);
                 mapView.getOverlays().add(marker);
             }
             updateCenterLocation();
@@ -122,5 +126,12 @@ public class MapFragment extends Fragment {
     private void centerToLocation(double latitude, double longitude) {
         mapView.getController().setCenter(new GeoPoint(latitude, longitude));
     }
+
+    private final Marker.OnMarkerClickListener onMarkerClickListener = (marker, mapView) -> {
+        Intent intent = new Intent(requireContext(), RestaurantDetailActivity.class);
+        intent.putExtra("restaurantId", (long) marker.getRelatedObject());
+        ActivityCompat.startActivity(requireActivity(), intent, null);
+        return false;
+    };
 }
 
