@@ -15,7 +15,7 @@ import com.startup.go4lunch.ui.WorkmateListFragmentViewModel;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
 
-    private static ViewModelFactory factory;
+    private static volatile ViewModelFactory factory;
     private final RestaurantRepository restaurantRepository;
     private final LocationRepository locationRepository;
     private final SearchRepository searchRepository;
@@ -41,6 +41,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
 
     @NonNull
     @Override
+    @SuppressWarnings("unchecked")
     public <T extends androidx.lifecycle.ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(MainActivityViewModel.class)) {
             return (T) new MainActivityViewModel(restaurantRepository,locationRepository,workmateRepository,searchRepository);
