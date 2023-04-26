@@ -43,6 +43,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.startup.go4lunch.di.ViewModelFactory;
 import com.startup.go4lunch.ui.MainActivityViewModel;
+import com.startup.go4lunch.ui.RestaurantDetailActivity;
 import com.startup.go4lunch.ui.ViewPagerAdapter;
 
 import java.util.Arrays;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private final static int LOCATION_REQUEST_CODE = 1;
     private MainActivityViewModel viewModel;
     private FirebaseAuth firebaseAuth;
+    private FirebaseUser firebaseUser;
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -110,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void verifyFirebaseUser() {
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser == null) {
             startSignInActivity();
         } else {
@@ -253,12 +255,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
+        final int YOUR_LUNCH = R.id.activity_main_drawer_your_lunch;
+        final int SETTING = R.id.activity_main_drawer_settings;
+        final int LOGOUT = R.id.activity_main_drawer_logout;
         switch (id) {
-            case R.id.activity_main_drawer_lunch: // TODO
+            case YOUR_LUNCH: goToRestaurantDetailActivity();
                 break;
-            case R.id.activity_main_drawer_settings: // TODO
+            case SETTING: // TODO
                 break;
-            case R.id.activity_main_drawer_logout: AuthUI.getInstance().signOut(this).addOnCompleteListener(task->startSignInActivity());
+            case LOGOUT: AuthUI.getInstance().signOut(this).addOnCompleteListener(task->startSignInActivity());
                 break;
         }
         this.drawerLayout.closeDrawer(GravityCompat.START);
@@ -271,6 +276,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             this.drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+        }
+    }
+
+    private void goToRestaurantDetailActivity() {
+        long workmateRestaurantSelectedUid = viewModel.getWorkmateRestaurantSelectedUid(firebaseUser.getUid());
+        if (workmateRestaurantSelectedUid != 0) {
+            Intent intent = new Intent(this, RestaurantDetailActivity.class);
+            intent.putExtra("restaurantId", workmateRestaurantSelectedUid);
+            ActivityCompat.startActivity(this, intent, null);
         }
     }
 }
