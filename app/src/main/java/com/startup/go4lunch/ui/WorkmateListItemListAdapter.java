@@ -55,15 +55,15 @@ public class WorkmateListItemListAdapter extends ListAdapter<WorkmateListItem, W
         }
 
         switch (workmateListItem.getDisplayTextType()) {
-            case WorkmateListItem.DISPLAY_TEXTE_EATING :
+            case WorkmateListItem.DISPLAY_TEXT_EATING:
                 if (restaurantChoice != null) {
                     holder.workmateText.setText(String.format(resources.getString(R.string.workmate_list_item_text_eating), workmate.getName(), restaurantChoice.getType(), restaurantChoice.getName()));
                     break;
                 }
-            case WorkmateListItem.DISPLAY_TEXTE_NOT_DECIDED:
+            case WorkmateListItem.DISPLAY_TEXT_NOT_DECIDED:
                 holder.workmateText.setText(String.format(resources.getString(R.string.workmate_list_item_text_not_decided), workmate.getName()));
                 break ;
-            case WorkmateListItem.DISPLAY_TEXTE_JOINING:
+            case WorkmateListItem.DISPLAY_TEXT_JOINING:
                 holder.workmateText.setText(String.format(resources.getString(R.string.workmate_list_item_text_joining), workmate.getName()));
                 break ;
         }

@@ -70,7 +70,7 @@ public class WorkmateRepository {
         List<Workmate> workmateListResearched = new ArrayList<>();
         if (workmateList != null) {
             for (Workmate workmate: workmateList) {
-                if (workmate.getRestaurantSelectedUid() == restaurantUid) {
+                if (workmate.getRestaurantSelectedUid() != null && workmate.getRestaurantSelectedUid() == restaurantUid) {
                     workmateListResearched.add(workmate);
                 }
             }
@@ -78,7 +78,7 @@ public class WorkmateRepository {
         return workmateListResearched;
     }
 
-    public void setRestaurantSelectedToWorkmate(@NonNull String workmateUid,@NonNull Long restaurantSelectedUid) {
+    public void setRestaurantSelectedToWorkmate(@NonNull String workmateUid,@Nullable Long restaurantSelectedUid) {
         workmateApi.setWorkmateRestaurantSelectedUid(workmateUid, restaurantSelectedUid);
     }
 

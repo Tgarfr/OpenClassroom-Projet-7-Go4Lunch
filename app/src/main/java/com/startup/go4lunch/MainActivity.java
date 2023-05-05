@@ -51,6 +51,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final int YOUR_LUNCH_RESOURCE_ID = R.id.activity_main_drawer_your_lunch;
+    private static final int SETTING_RESOURCE_ID = R.id.activity_main_drawer_settings;
+    private static final int LOGOUT_RESOURCE_ID = R.id.activity_main_drawer_logout;
     private final static int LOCATION_REQUEST_CODE = 1;
     private MainActivityViewModel viewModel;
     private FirebaseAuth firebaseAuth;
@@ -255,15 +258,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        final int YOUR_LUNCH = R.id.activity_main_drawer_your_lunch;
-        final int SETTING = R.id.activity_main_drawer_settings;
-        final int LOGOUT = R.id.activity_main_drawer_logout;
         switch (id) {
-            case YOUR_LUNCH: goToRestaurantDetailActivity();
+            case YOUR_LUNCH_RESOURCE_ID: goToRestaurantDetailActivity();
                 break;
-            case SETTING: // TODO
+            case SETTING_RESOURCE_ID: // TODO
                 break;
-            case LOGOUT: AuthUI.getInstance().signOut(this).addOnCompleteListener(task->startSignInActivity());
+            case LOGOUT_RESOURCE_ID: AuthUI.getInstance().signOut(this).addOnCompleteListener(task->startSignInActivity());
                 break;
         }
         this.drawerLayout.closeDrawer(GravityCompat.START);

@@ -73,7 +73,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         if (restaurant.getType() == null) {
             restaurantType = "Type not provided";
         } else {
-            restaurantType = viewModel.setCapitalFistChar(restaurant.getType());
+            restaurantType = setCapitalFistChar(restaurant.getType());
         }
         TextView textTextView = findViewById(R.id.activity_restaurant_detail_text);
         textTextView.setText(String.format("%s - %s", restaurantType, restaurant.getAddress()));
@@ -97,7 +97,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         findViewById(R.id.detail_restaurant_like_button).setOnClickListener(onClickLikeIcon);
 
         validButton = findViewById(R.id.activity_restaurant_detail_valid_button);
-        if (userWorkmate.getRestaurantSelectedUid() == restaurant.getId()) {
+        if (userWorkmate.getRestaurantSelectedUid() != null &&  userWorkmate.getRestaurantSelectedUid() == restaurant.getId()) {
             validButton.setColorFilter(getResources().getColor(R.color.detail_activity_valid_button_green));
         }
         validButton.setOnClickListener(onClickValidButton);
@@ -140,7 +140,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private final View.OnClickListener onClickValidButton = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (userWorkmate.getRestaurantSelectedUid() == restaurant.getId()) {
+            if (userWorkmate.getRestaurantSelectedUid() != null && userWorkmate.getRestaurantSelectedUid() == restaurant.getId()) {
                 validButton.setColorFilter(getResources().getColor(R.color.black));
                 viewModel.setRestaurantSelected(userWorkmate.getUid(), 0L);
             } else {
@@ -189,5 +189,12 @@ public class RestaurantDetailActivity extends AppCompatActivity {
             TextView likeText = findViewById(R.id.detail_restaurant_like_text);
             likeText.setTextColor(getResources().getColor(R.color.primary_color));
         }
+    }
+
+    @NonNull
+    public String setCapitalFistChar(@NonNull String string) {
+        char[] char_table = string.toCharArray();
+        char_table[0] = Character.toUpperCase(char_table[0]);
+        return new String(char_table);
     }
 }
