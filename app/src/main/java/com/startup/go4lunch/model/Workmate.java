@@ -10,11 +10,11 @@ public class Workmate {
     private String uid;
     private String name;
     private String avatarUri;
-    private long restaurantSelectedUid;
+    private Long restaurantSelectedUid;
 
     public Workmate() {}
 
-    public Workmate(@NonNull String uid, @NonNull String name, @Nullable String avatarUri,long restaurantSelectedUid) {
+    public Workmate(@NonNull String uid, @NonNull String name, @Nullable String avatarUri,@Nullable Long restaurantSelectedUid) {
         this.uid = uid;
         this.name = name;
         this.avatarUri = avatarUri;
@@ -36,7 +36,8 @@ public class Workmate {
         return avatarUri;
     }
 
-    public long getRestaurantSelectedUid() {
+    @Nullable
+    public Long getRestaurantSelectedUid() {
         return restaurantSelectedUid;
     }
 

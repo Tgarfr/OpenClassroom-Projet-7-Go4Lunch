@@ -9,9 +9,9 @@ public class WorkmateListItem {
 
     private final Restaurant restaurantChoice;
     private final int displayTextType;
-    public static final int DISPLAY_TEXTE_EATING = 1;
-    public static final int DISPLAY_TEXTE_NOT_DECIDED = 2;
-    public static final int DISPLAY_TEXTE_JOINING = 3;
+    public static final int DISPLAY_TEXT_EATING = 1;
+    public static final int DISPLAY_TEXT_NOT_DECIDED = 2;
+    public static final int DISPLAY_TEXT_JOINING = 3;
 
     public WorkmateListItem(@NonNull Workmate workmate, @Nullable Restaurant restaurantChoice, int displayTextType) {
         this.workmate = workmate;

@@ -17,8 +17,8 @@ import java.util.List;
 
 public class RestaurantDetailActivityViewModel extends ViewModel {
 
-    RestaurantRepository restaurantRepository;
-    WorkmateRepository workmateRepository;
+    private final RestaurantRepository restaurantRepository;
+    private final WorkmateRepository workmateRepository;
 
     public RestaurantDetailActivityViewModel(@NonNull RestaurantRepository restaurantRepository,@NonNull WorkmateRepository workmateRepository) {
         this.restaurantRepository = restaurantRepository;
@@ -52,7 +52,7 @@ public class RestaurantDetailActivityViewModel extends ViewModel {
         workmateRepository.removeRestaurantWorkmateVote(workmateUid, restaurantUid);
     }
 
-    public void setRestaurantSelected(@NonNull String workmateUid,Long restaurantId) {
+    public void setRestaurantSelected(@NonNull String workmateUid,@Nullable Long restaurantId) {
         workmateRepository.setRestaurantSelectedToWorkmate(workmateUid, restaurantId);
     }
 
@@ -66,15 +66,8 @@ public class RestaurantDetailActivityViewModel extends ViewModel {
         List<Workmate> workmateList = workmateRepository.getWorkmateListFromRestaurant(restaurant.getId());
         List<WorkmateListItem> workmateListItemList = new ArrayList<>();
         for (Workmate workmate: workmateList) {
-            workmateListItemList.add(new WorkmateListItem(workmate, null, WorkmateListItem.DISPLAY_TEXTE_JOINING));
+            workmateListItemList.add(new WorkmateListItem(workmate, null, WorkmateListItem.DISPLAY_TEXT_JOINING));
         }
         return workmateListItemList;
-    }
-
-    @NonNull
-    public String setCapitalFistChar(@NonNull String string) {
-        char[] char_table = string.toCharArray();
-        char_table[0] = Character.toUpperCase(char_table[0]);
-        return new String(char_table);
     }
 }
