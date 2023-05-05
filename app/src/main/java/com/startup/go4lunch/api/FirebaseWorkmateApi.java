@@ -36,7 +36,7 @@ public class FirebaseWorkmateApi implements WorkmateApi {
     }
 
     @Override
-    public void setWorkmateRestaurantSelectedUid(@NonNull String workmateUid, long restaurantUid) {
+    public void setWorkmateRestaurantSelectedUid(@NonNull String workmateUid, Long restaurantUid) {
         collectionWorkmates.document(workmateUid).update("restaurantSelectedUid",restaurantUid);
     }
 

@@ -42,12 +42,13 @@ public class WorkmateListFragmentViewModel extends ViewModel {
         if (workmateList != null) {
             for (Workmate workmate: workmateList) {
                 int displayTextType;
-                if (workmate.getRestaurantSelectedUid() == 0) {
-                    displayTextType = WorkmateListItem.DISPLAY_TEXTE_NOT_DECIDED;
+                if (workmate.getRestaurantSelectedUid() == null) {
+                    displayTextType = WorkmateListItem.DISPLAY_TEXT_NOT_DECIDED;
+                    workmateListItemList.add(new WorkmateListItem(workmate,null, displayTextType));
                 } else {
-                    displayTextType = WorkmateListItem.DISPLAY_TEXTE_EATING;
+                    displayTextType = WorkmateListItem.DISPLAY_TEXT_EATING;
+                    workmateListItemList.add(new WorkmateListItem(workmate,restaurantRepository.getRestaurantFromId(workmate.getRestaurantSelectedUid()), displayTextType));
                 }
-                workmateListItemList.add(new WorkmateListItem(workmate,restaurantRepository.getRestaurantFromId(workmate.getRestaurantSelectedUid()), displayTextType));
             }
         }
         return workmateListItemList;

@@ -49,7 +49,7 @@ public class MainActivityViewModel extends ViewModel {
     public void createWorkmate(FirebaseUser firebaseUser) {
         String name = firebaseUser.getDisplayName() != null ? firebaseUser.getDisplayName() : "Name";
         String urlAvatar = firebaseUser.getPhotoUrl() != null ? firebaseUser.getPhotoUrl().toString() : null;
-        Workmate workmate = new Workmate(firebaseUser.getUid(), name,urlAvatar, 0);
+        Workmate workmate = new Workmate(firebaseUser.getUid(), name,urlAvatar, null);
         workmateRepository.createWorkmate(workmate);
     }
 
