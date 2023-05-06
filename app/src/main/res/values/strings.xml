@@ -53,11 +53,6 @@
     <string name="search_menu_restaurant">Search restaurants</string>
     <string name="search_menu_workmate">Search workmates</string>
 
-    // Facebook
-    <string name="facebook_app_id">583964260343565</string>
-    <string name="fb_login_protocol_scheme">fb583964260343565</string>
-    <string name="facebook_client_token">73c82f19351756011c555367bcbf7a42</string>
-
     // Login Activity
     <string name="login_activity_restaurant_picture">Restaurant</string>
 
