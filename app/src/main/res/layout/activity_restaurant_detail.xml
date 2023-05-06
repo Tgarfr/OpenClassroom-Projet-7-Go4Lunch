@@ -10,12 +10,11 @@
         android:id="@+id/activity_restaurant_detail_picture"
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:contentDescription="@string/restaurant_picture"
+        android:contentDescription="@string/restaurant_detail_picture"
         app:layout_constraintBottom_toTopOf="@id/activity_restaurant_detail_frame_2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:scaleType="centerCrop"
-        android:contentDescription="@string/restaurant_picture"
         android:src="@drawable/restaurant_picture_default"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

@@ -21,7 +21,7 @@
 
     // Restaurant Detail
     <string name="restaurant_detail_restaurant_name">Restaurant Name</string>
-    <string name="restaurant_picture">Restaurant picture</string>
+    <string name="restaurant_detail_picture">Restaurant picture</string>
     <string name="restaurant_detail_description_of_the_restaurant">Description of the restaurant</string>
     <string name="restaurant_detail_valid_button">Valid button</string>
     <string name="restaurant_detail_workmate_list_avatar">Workmate_avatar</string>
@@ -52,5 +52,8 @@
     <string name="search_menu">Search menu</string>
     <string name="search_menu_restaurant">Search restaurants</string>
     <string name="search_menu_workmate">Search workmates</string>
+
+    // Login Activity
+    <string name="login_activity_restaurant_picture">Restaurant</string>
 
 </resources>

@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,10 +28,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.AuthUI.IdpConfig;
-import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
-import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
@@ -45,9 +41,6 @@ import com.startup.go4lunch.di.ViewModelFactory;
 import com.startup.go4lunch.ui.MainActivityViewModel;
 import com.startup.go4lunch.ui.RestaurantDetailActivity;
 import com.startup.go4lunch.ui.ViewPagerAdapter;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -117,37 +110,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void verifyFirebaseUser() {
         firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser == null) {
-            startSignInActivity();
+            goLoginActivity();
         } else {
             updateHeaderLayoutWithUserData();
             viewModel.createWorkmate(firebaseUser);
         }
     }
 
-    ActivityResultLauncher<Intent> signInLuncher = registerForActivityResult(new FirebaseAuthUIActivityResultContract(), this::onSignInResult);
-
-    private void startSignInActivity() {
-        List<IdpConfig> providers = Arrays.asList(
-                new AuthUI.IdpConfig.EmailBuilder().build(),
-                new AuthUI.IdpConfig.GoogleBuilder().build());
-        Intent signInIntent = AuthUI.getInstance()
-                .createSignInIntentBuilder()
-                .setAvailableProviders(providers)
-                .build();
-        signInLuncher.launch(signInIntent);
+    private void goLoginActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
-    private void onSignInResult(FirebaseAuthUIAuthenticationResult result) {
-        if (result.getResultCode() == RESULT_OK) {
-             // TODO : Create Workmate
-            updateHeaderLayoutWithUserData();
-        } else {
-            startSignInActivity();
-            FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-            if (firebaseUser != null) {
-                viewModel.createWorkmate(firebaseUser);
-            }
-        }
+    private void logout() {
+        FirebaseAuth.getInstance().signOut();
+        LoginManager.getInstance().logOut();
+        goLoginActivity();
     }
 
     private void getCurrentLocation() {
@@ -263,7 +242,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case SETTING_RESOURCE_ID: // TODO
                 break;
-            case LOGOUT_RESOURCE_ID: AuthUI.getInstance().signOut(this).addOnCompleteListener(task->startSignInActivity());
+            case LOGOUT_RESOURCE_ID: logout();
                 break;
         }
         this.drawerLayout.closeDrawer(GravityCompat.START);
