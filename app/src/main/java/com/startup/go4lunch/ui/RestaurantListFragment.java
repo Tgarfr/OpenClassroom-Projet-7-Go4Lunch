@@ -21,6 +21,8 @@ import com.startup.go4lunch.di.ViewModelFactory;
 import com.startup.go4lunch.model.Restaurant;
 import com.startup.go4lunch.model.RestaurantListItem;
 
+import java.util.ArrayList;
+
 public class RestaurantListFragment extends Fragment implements RestaurantListAdapter.RestaurantListAdapterInterface {
 
     private RestaurantListFragmentViewModel viewModel;
@@ -31,12 +33,11 @@ public class RestaurantListFragment extends Fragment implements RestaurantListAd
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list_restaurant, container, false);
         viewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(RestaurantListFragmentViewModel.class);
-
-        viewModel.getRestaurantListLiveData().observe(getViewLifecycleOwner(), restaurantList -> restaurantListAdapter.submitList(viewModel.getListItemRestaurant()));
-        viewModel.getRestaurantListSearchString().observe(getViewLifecycleOwner(), string -> restaurantListAdapter.submitList(viewModel.getListItemRestaurant()));
+        viewModel.setLiveDataObserver(getViewLifecycleOwner());
+        viewModel.getRestaurantListItemLiveData().observe(getViewLifecycleOwner(), restaurantListItem -> restaurantListAdapter.submitList(new ArrayList<>(restaurantListItem)) );
 
         restaurantListAdapter = new RestaurantListAdapter(DIFF_CALLBACK, this);
-        restaurantListAdapter.submitList(viewModel.getListItemRestaurant());
+        restaurantListAdapter.submitList(viewModel.getRestaurantListItemLiveData().getValue());
         RecyclerView recyclerView = view.findViewById(R.id.list_restaurant_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(restaurantListAdapter);
@@ -68,8 +69,7 @@ public class RestaurantListFragment extends Fragment implements RestaurantListAd
     private final FragmentResultListener fragmentResultListener = new FragmentResultListener() {
         @Override
         public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-            viewModel.sortList(result.getInt("SortMethod"));
-            restaurantListAdapter.notifyDataSetChanged();
+            viewModel.sortRestaurantListItemListLiveData(result.getInt("SortMethod"));
         }
     };
 }

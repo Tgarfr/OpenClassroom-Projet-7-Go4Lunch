@@ -50,7 +50,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             return (T) new MapFragmentViewModel(locationRepository,restaurantRepository,searchRepository);
         }
         if (modelClass.isAssignableFrom(RestaurantListFragmentViewModel.class)) {
-            return (T) new RestaurantListFragmentViewModel(restaurantRepository, searchRepository, locationRepository);
+            return (T) new RestaurantListFragmentViewModel(restaurantRepository, searchRepository, locationRepository, workmateRepository);
         }
         if (modelClass.isAssignableFrom(WorkmateListFragmentViewModel.class)) {
             return (T) new WorkmateListFragmentViewModel(workmateRepository, restaurantRepository, searchRepository);

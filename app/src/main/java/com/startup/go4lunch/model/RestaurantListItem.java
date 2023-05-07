@@ -9,14 +9,14 @@ public class RestaurantListItem {
 
     private final Restaurant restaurant;
     private int distance;
-    private short numberOfWorkmate;
+    private int numberOfWorkmate;
     private float score;
     public static final int SORT_BY_NAME = 1;
     public static final int SORT_BY_DISTANCE = 2;
     public static final int SORT_BY_TYPE = 3;
     public static final int SORT_BY_NOTE = 4;
 
-    public RestaurantListItem(@NonNull Restaurant restaurant, int distance, short numberOfWorkmate, float score) {
+    public RestaurantListItem(@NonNull Restaurant restaurant, int distance, int numberOfWorkmate, float score) {
         this.restaurant = restaurant;
         this.distance = distance;
         this.numberOfWorkmate = numberOfWorkmate;
@@ -44,7 +44,7 @@ public class RestaurantListItem {
         this.distance = distance;
     }
 
-    public void setNumberOfWorkmate(short numberOfWorkmate) {
+    public void setNumberOfWorkmate(int numberOfWorkmate) {
         this.numberOfWorkmate = numberOfWorkmate;
     }
 
@@ -59,7 +59,10 @@ public class RestaurantListItem {
             return false;
         }
         RestaurantListItem restaurantListItem = (RestaurantListItem) obj;
-        return restaurant.equals(restaurantListItem.getRestaurant()) && distance == restaurantListItem.getDistance();
+        return restaurant.equals(restaurantListItem.getRestaurant()) &&
+                distance == restaurantListItem.getDistance() &&
+                numberOfWorkmate == restaurantListItem.getNumberOfWorkmate() &&
+                score == restaurantListItem.getScore();
     }
 
     public static class RestaurantListItemNameComparator implements Comparator<RestaurantListItem> {
