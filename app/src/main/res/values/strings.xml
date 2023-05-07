@@ -55,6 +55,10 @@
 
     // Login Activity
     <string name="login_activity_restaurant_picture">Restaurant</string>
+    <string name="login_activity_slogan">Find a nice restaurant and invite your co-workers for lunch!</string>
+    <string name="login_activity_google_button_text">Sign in with Google</string>
+    <string name="login_activity_facebook_button_text">Sign in with Facebook</string>
+    <string name="login_activity_logo">Logo</string>
 
     // Notification
     <string name="notification_message">%s, %s %s</string>
