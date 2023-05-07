@@ -10,13 +10,13 @@ public class RestaurantListItem {
     private final Restaurant restaurant;
     private int distance;
     private int numberOfWorkmate;
-    private float score;
+    private int score;
     public static final int SORT_BY_NAME = 1;
     public static final int SORT_BY_DISTANCE = 2;
     public static final int SORT_BY_TYPE = 3;
     public static final int SORT_BY_NOTE = 4;
 
-    public RestaurantListItem(@NonNull Restaurant restaurant, int distance, int numberOfWorkmate, float score) {
+    public RestaurantListItem(@NonNull Restaurant restaurant, int distance, int numberOfWorkmate, int score) {
         this.restaurant = restaurant;
         this.distance = distance;
         this.numberOfWorkmate = numberOfWorkmate;
@@ -36,7 +36,7 @@ public class RestaurantListItem {
         return numberOfWorkmate;
     }
 
-    public float getScore() {
+    public int getScore() {
         return score;
     }
 
@@ -48,7 +48,7 @@ public class RestaurantListItem {
         this.numberOfWorkmate = numberOfWorkmate;
     }
 
-    public void setScore(float score) {
+    public void setScore(int score) {
         this.score = score;
     }
 
