@@ -1,8 +1,12 @@
 package com.startup.go4lunch;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.InputType;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -23,6 +27,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -67,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
     private void configureFacebookButton() {
         callbackManager = CallbackManager.Factory.create();
         LoginButton loginButton = findViewById(R.id.login_button_facebook);
+        loginButton.setLoginText(getResources().getString(R.string.login_activity_facebook_button_text));
         loginButton.setPermissions(Arrays.asList("public_profile","email"));
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -85,6 +91,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void configureGoogleButton() {
+        SignInButton signInButton = findViewById(R.id.login_button_google);
+        setGoogleButtonText(signInButton);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestProfile()
@@ -100,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, "Google sign in failed", Toast.LENGTH_LONG).show();
             }
         });
-        findViewById(R.id.login_button_google).setOnClickListener(v ->
+        signInButton.setOnClickListener(v ->
                 googleSignInClient.signOut().addOnCompleteListener(task -> {
                     Intent signInIntent = googleSignInClient.getSignInIntent();
                     activityResultLauncher.launch(signInIntent);
@@ -147,5 +155,17 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         firebaseAuth.removeAuthStateListener(firebaseAuthListener);
+    }
+
+    protected void setGoogleButtonText(SignInButton signInButton) {
+        for (int i = 0; i < signInButton.getChildCount(); i++) {
+            View view = signInButton.getChildAt(i);
+            if (view instanceof TextView) {
+                TextView textView = (TextView) view;
+                textView.setPadding(0,0,0,0);
+                textView.setText(getResources().getText(R.string.login_activity_google_button_text));
+                return;
+            }
+        }
     }
 }
