@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/item_list_restaurant"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="85dp"
     android:paddingStart="5dp"
     android:paddingEnd="0dp"
     android:paddingBottom="15dp">
@@ -48,8 +48,8 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/restaurant_image"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:src="@drawable/icon_restaurant_image_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -90,6 +90,16 @@
         app:layout_constraintTop_toBottomOf="@id/restaurant_workmate_image" />
 
     <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/restaurant_star_1_center"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:src="@drawable/icon_restaurant_star_23_center"
+        app:layout_constraintBottom_toBottomOf="@id/restaurant_star_1"
+        app:layout_constraintLeft_toLeftOf="@id/restaurant_star_1"
+        app:layout_constraintRight_toRightOf="@id/restaurant_star_1"
+        app:layout_constraintTop_toTopOf="@id/restaurant_star_1" />
+
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/restaurant_star_2"
         android:layout_width="20dp"
         android:layout_height="20dp"
@@ -98,11 +108,31 @@
         app:layout_constraintTop_toBottomOf="@id/restaurant_workmate_image" />
 
     <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/restaurant_star_2_center"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:src="@drawable/icon_restaurant_star_23_center"
+        app:layout_constraintBottom_toBottomOf="@id/restaurant_star_2"
+        app:layout_constraintLeft_toLeftOf="@id/restaurant_star_2"
+        app:layout_constraintRight_toRightOf="@id/restaurant_star_2"
+        app:layout_constraintTop_toTopOf="@id/restaurant_star_2" />
+
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/restaurant_star_3"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:src="@drawable/icon_restaurant_star_24"
         app:layout_constraintRight_toLeftOf="@id/restaurant_star_2"
         app:layout_constraintTop_toBottomOf="@id/restaurant_workmate_image" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/restaurant_star_3_center"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:src="@drawable/icon_restaurant_star_23_center"
+        app:layout_constraintBottom_toBottomOf="@id/restaurant_star_3"
+        app:layout_constraintLeft_toLeftOf="@id/restaurant_star_3"
+        app:layout_constraintRight_toRightOf="@id/restaurant_star_3"
+        app:layout_constraintTop_toTopOf="@id/restaurant_star_3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

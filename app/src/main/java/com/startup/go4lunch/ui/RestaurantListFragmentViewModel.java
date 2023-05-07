@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.startup.go4lunch.model.Restaurant;
 import com.startup.go4lunch.model.RestaurantListItem;
 import com.startup.go4lunch.model.Workmate;
+import com.startup.go4lunch.model.RestaurantWorkmateVote;
 import com.startup.go4lunch.repository.LocationRepository;
 import com.startup.go4lunch.repository.RestaurantRepository;
 import com.startup.go4lunch.repository.SearchRepository;
@@ -40,6 +41,7 @@ public class RestaurantListFragmentViewModel extends androidx.lifecycle.ViewMode
         restaurantRepository.getRestaurantListLiveData().observe(lifecycleOwner, restaurantList -> getRestaurantListItem());
         searchRepository.getRestaurantListFragmentSearchLiveData().observe(lifecycleOwner, string -> getRestaurantListItem());
         workmateRepository.getWorkmateListLiveData().observe(lifecycleOwner, workmateList -> getRestaurantListItem());
+        workmateRepository.getRestaurantWorkmateVoteListLiveData().observe(lifecycleOwner, restaurantWorkmateVotes -> getRestaurantListItem());
     }
 
     public LiveData<List<RestaurantListItem>> getRestaurantListItemLiveData() {
@@ -59,7 +61,7 @@ public class RestaurantListFragmentViewModel extends androidx.lifecycle.ViewMode
                 distance = (int) location.distanceTo(restaurantLocation);
             }
             int numberOfWorkmate = getNumberOfWorkmate(restaurant.getId());
-            float score = 0; // TODO
+            int score = getRestaurantScore(restaurant.getId());
             restaurantListItemList.add(new RestaurantListItem(restaurant, distance, numberOfWorkmate, score));
         }
         restaurantListItemLiveData.setValue(restaurantListItemList);
@@ -85,6 +87,19 @@ public class RestaurantListFragmentViewModel extends androidx.lifecycle.ViewMode
             }
             restaurantListItemLiveData.setValue(restaurantListItemList);
         }
+    }
+
+    private int getRestaurantScore(long restaurantUid) {
+        List<RestaurantWorkmateVote> restaurantWorkmateVoteList = workmateRepository.getRestaurantWorkmateVoteListLiveData().getValue();
+        int score = 0;
+        if (restaurantWorkmateVoteList != null) {
+            for ( RestaurantWorkmateVote restaurantWorkmateVote : restaurantWorkmateVoteList) {
+                if (restaurantWorkmateVote.getRestaurantUid() == restaurantUid) {
+                    score++;
+                }
+            }
+        }
+        return score;
     }
 
     private int getNumberOfWorkmate(long restaurantUid) {
