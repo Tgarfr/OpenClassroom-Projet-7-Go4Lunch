@@ -151,7 +151,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
     private void configureWorkmateList() {
         if (restaurant != null && userWorkmate != null) {
-            adapter = new WorkmateListItemListAdapter(DIFF_CALLBACK,context);
+            adapter = new WorkmateListItemListAdapter(DIFF_CALLBACK, context, null);
             viewModel.getWorkmateListItemLiveData(restaurant.getId()).observe(this, workmateListItems -> adapter.submitList(workmateListItems));
             RecyclerView recyclerView = findViewById(R.id.detail_restaurant_recyclerview);
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
