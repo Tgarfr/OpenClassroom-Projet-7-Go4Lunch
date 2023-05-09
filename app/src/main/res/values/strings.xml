@@ -17,6 +17,7 @@
     <string name="info_no_username_found">User Name</string>
     <string name="info_no_email_found">Email</string>
     <string name="avatar">Avatar</string>
+    <string name="navigation_drawer_logo">Logo</string>
 
     // Restaurant Detail
     <string name="restaurant_detail_restaurant_name">Restaurant Name</string>
