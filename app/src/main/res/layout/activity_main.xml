@@ -45,6 +45,15 @@
         app:headerLayout="@layout/activity_main_nav_header"
         app:itemIconTint="@color/text_menu"
         app:itemTextColor="@color/text_menu"
-        app:menu="@menu/activity_main_menu_drawer" />
+        app:menu="@menu/activity_main_menu_drawer">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:contentDescription="@string/navigation_drawer_logo"
+            android:src="@drawable/icon_navigation_drawer_logo_100" />
+
+    </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>
