@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.startup.go4lunch.R;
 import com.startup.go4lunch.di.ViewModelFactory;
 import com.startup.go4lunch.model.Restaurant;
+import com.startup.go4lunch.model.RestaurantMapMarker;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -43,12 +44,13 @@ public class MapFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         viewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(MapFragmentViewModel.class);
+        viewModel.setLiveDataObserver(getViewLifecycleOwner());
         context = requireContext();
 
         locationLiveData = viewModel.getLocationLiveData();
         locationLiveData.observe(getViewLifecycleOwner(), location -> updateCenterLocation());
 
-        viewModel.getRestaurantListLiveData().observe(getViewLifecycleOwner(), RestaurantListLiveDataObserver);
+        viewModel.getRestaurantMapMarkerListLiveData().observe(getViewLifecycleOwner(), restaurantMapMarkerListLiveDataObserver);
 
         searchLiveData = viewModel.getSearchStringLivedata();
         searchLiveData.observe(getViewLifecycleOwner(), s -> updateCenterLocation() );
@@ -82,12 +84,17 @@ public class MapFragment extends Fragment {
         super.onPause();
     }
 
-    Observer<List<Restaurant>> RestaurantListLiveDataObserver = new Observer<List<Restaurant>>() {
+    Observer<List<RestaurantMapMarker>> restaurantMapMarkerListLiveDataObserver = new Observer<List<RestaurantMapMarker>>() {
         @Override
-        public void onChanged(List<Restaurant> restaurantList) {
-            for (Restaurant restaurant: restaurantList) {
+        public void onChanged(List<RestaurantMapMarker> restaurantMapMarkerList) {
+            for (RestaurantMapMarker restaurantMapMarker: restaurantMapMarkerList) {
+                Restaurant restaurant = restaurantMapMarker.getRestaurant();
                 Marker marker = new Marker(mapView);
-                marker.setIcon(AppCompatResources.getDrawable(context,R.mipmap.icon_map_restaurant));
+                if (restaurantMapMarker.getWorkmateLunchOnRestaurant()) {
+                    marker.setIcon(AppCompatResources.getDrawable(context,R.mipmap.icon_map_restaurant_marker_green));
+                } else {
+                    marker.setIcon(AppCompatResources.getDrawable(context,R.mipmap.icon_map_restaurant_marker));
+                }
                 marker.setTitle(restaurant.getName());
                 marker.setPosition(new GeoPoint(restaurant.getLatitude(),restaurant.getLongitude()));
                 marker.setRelatedObject(restaurant.getId());
