@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,11 +25,17 @@ public class WorkmateListItemListAdapter extends ListAdapter<WorkmateListItem, W
 
     Context context;
     Resources resources;
+    WorkmateListItemListAdapterInterface workmateListItemListAdapterInterface;
 
-    protected WorkmateListItemListAdapter(@NonNull DiffUtil.ItemCallback<WorkmateListItem> diffCallback, Context context) {
+    interface WorkmateListItemListAdapterInterface {
+        void clickOnRestaurant(@NonNull Restaurant restaurant);
+    }
+
+    protected WorkmateListItemListAdapter(@NonNull DiffUtil.ItemCallback<WorkmateListItem> diffCallback, @NonNull Context context,@Nullable WorkmateListItemListAdapterInterface workmateListItemListAdapterInterface) {
         super(diffCallback);
         this.context = context;
         this.resources = context.getResources();
+        this.workmateListItemListAdapterInterface = workmateListItemListAdapterInterface;
     }
 
     @NonNull
@@ -58,6 +65,9 @@ public class WorkmateListItemListAdapter extends ListAdapter<WorkmateListItem, W
             case WorkmateListItem.DISPLAY_TEXT_EATING:
                 if (restaurantChoice != null) {
                     holder.workmateText.setText(String.format(resources.getString(R.string.workmate_list_item_text_eating), workmate.getName(), restaurantChoice.getType(), restaurantChoice.getName()));
+                    if (workmateListItemListAdapterInterface != null) {
+                        holder.workmateText.setOnClickListener(v -> workmateListItemListAdapterInterface.clickOnRestaurant(restaurantChoice));
+                    }
                     break;
                 }
             case WorkmateListItem.DISPLAY_TEXT_NOT_DECIDED:
@@ -79,5 +89,4 @@ public class WorkmateListItemListAdapter extends ListAdapter<WorkmateListItem, W
             workmateAvatar = itemView.findViewById(R.id.item_list_workmate_avatar);
         }
     }
-
 }
