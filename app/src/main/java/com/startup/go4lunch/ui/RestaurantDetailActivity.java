@@ -19,6 +19,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,9 +31,15 @@ import com.startup.go4lunch.di.ViewModelFactory;
 import com.startup.go4lunch.model.Restaurant;
 import com.startup.go4lunch.model.Workmate;
 import com.startup.go4lunch.model.WorkmateListItem;
+import com.startup.go4lunch.notification.NotificationWorker;
+
+import java.util.Calendar;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class RestaurantDetailActivity extends AppCompatActivity {
 
+    private final static int NOTIFICATION_HOUR = 12;
     private final Context context = this;
     private RestaurantDetailActivityViewModel viewModel;
     private Restaurant restaurant;
@@ -150,6 +160,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
             } else {
                 validButton.setColorFilter(getResources().getColor(R.color.detail_activity_valid_button_green));
                 viewModel.setRestaurantSelected(userWorkmate.getUid(), restaurant.getId());
+                setNotificationRequest();
             }
         }
     };
@@ -215,6 +226,51 @@ public class RestaurantDetailActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    private void setNotificationRequest() {
+        Calendar calendar = Calendar.getInstance();
+        long timeNow = calendar.getTimeInMillis();
+        if (calendar.get(Calendar.HOUR_OF_DAY) > NOTIFICATION_HOUR) {
+            calendar.add(Calendar.DATE,1);
+        }
+        calendar.set(Calendar.HOUR_OF_DAY, NOTIFICATION_HOUR);
+        calendar.set(Calendar.MINUTE, 0);
+        long delay = calendar.getTimeInMillis() - timeNow;
+
+        Data notificationData = new Data.Builder()
+                .putString("message", String.format(getString(R.string.notification_message), restaurant.getName(),restaurant.getAddress(), generateNotificationWorkmates()))
+                .build();
+
+        WorkRequest workRequest = new OneTimeWorkRequest.Builder(NotificationWorker.class)
+                .setInitialDelay(delay,TimeUnit.MILLISECONDS)
+                .setInputData(notificationData)
+                .build();
+
+        WorkManager.getInstance(this).enqueue(workRequest);
+    }
+
+    @NonNull
+    private String generateNotificationWorkmates() {
+        if (restaurant != null) {
+            StringBuilder workmateNameListStringBuilder = new StringBuilder();
+            List<WorkmateListItem> workmateList = viewModel.getWorkmateListItemLiveData(restaurant.getId()).getValue();
+            if (workmateList != null) {
+                for (WorkmateListItem workmateListItem: workmateList) {
+                    if (!workmateListItem.getWorkmate().getUid().equals(userWorkmate.getUid())) {
+                        workmateNameListStringBuilder.append(workmateListItem.getWorkmate().getName()).append(", ");
+                    }
+                }
+                int length = workmateNameListStringBuilder.length();
+                if (length>0) {
+                    workmateNameListStringBuilder.delete(length-1, length);
+                } else {
+                    return ".";
+                }
+            }
+            return String.format(getString(R.string.notification_workmates),workmateNameListStringBuilder);
+        }
+        return "";
     }
 
     @NonNull
