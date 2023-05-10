@@ -61,4 +61,8 @@
     // Login Activity
     <string name="login_activity_restaurant_picture">Restaurant</string>
 
+    // Notification
+    <string name="notification_message">%s, %s %s</string>
+    <string name="notification_workmates">with %s.</string>
+
 </resources>
