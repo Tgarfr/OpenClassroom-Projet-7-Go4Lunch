@@ -82,7 +82,7 @@
         app:layout_constraintTop_toBottomOf="@id/restaurant_distance" />
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/restaurant_star_1"
+        android:id="@+id/restaurant_star_1_background"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:src="@drawable/icon_restaurant_star_24"
@@ -94,17 +94,17 @@
         android:layout_width="18dp"
         android:layout_height="18dp"
         android:src="@drawable/icon_restaurant_star_23_center"
-        app:layout_constraintBottom_toBottomOf="@id/restaurant_star_1"
-        app:layout_constraintLeft_toLeftOf="@id/restaurant_star_1"
-        app:layout_constraintRight_toRightOf="@id/restaurant_star_1"
-        app:layout_constraintTop_toTopOf="@id/restaurant_star_1" />
+        app:layout_constraintBottom_toBottomOf="@id/restaurant_star_1_background"
+        app:layout_constraintLeft_toLeftOf="@id/restaurant_star_1_background"
+        app:layout_constraintRight_toRightOf="@id/restaurant_star_1_background"
+        app:layout_constraintTop_toTopOf="@id/restaurant_star_1_background" />
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/restaurant_star_2"
+        android:id="@+id/restaurant_star_2_background"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:src="@drawable/icon_restaurant_star_24"
-        app:layout_constraintRight_toLeftOf="@id/restaurant_star_1"
+        app:layout_constraintRight_toLeftOf="@id/restaurant_star_1_background"
         app:layout_constraintTop_toBottomOf="@id/restaurant_workmate_image" />
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -112,17 +112,17 @@
         android:layout_width="18dp"
         android:layout_height="18dp"
         android:src="@drawable/icon_restaurant_star_23_center"
-        app:layout_constraintBottom_toBottomOf="@id/restaurant_star_2"
-        app:layout_constraintLeft_toLeftOf="@id/restaurant_star_2"
-        app:layout_constraintRight_toRightOf="@id/restaurant_star_2"
-        app:layout_constraintTop_toTopOf="@id/restaurant_star_2" />
+        app:layout_constraintBottom_toBottomOf="@id/restaurant_star_2_background"
+        app:layout_constraintLeft_toLeftOf="@id/restaurant_star_2_background"
+        app:layout_constraintRight_toRightOf="@id/restaurant_star_2_background"
+        app:layout_constraintTop_toTopOf="@id/restaurant_star_2_background" />
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/restaurant_star_3"
+        android:id="@+id/restaurant_star_3_background"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:src="@drawable/icon_restaurant_star_24"
-        app:layout_constraintRight_toLeftOf="@id/restaurant_star_2"
+        app:layout_constraintRight_toLeftOf="@id/restaurant_star_2_background"
         app:layout_constraintTop_toBottomOf="@id/restaurant_workmate_image" />
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -130,9 +130,27 @@
         android:layout_width="18dp"
         android:layout_height="18dp"
         android:src="@drawable/icon_restaurant_star_23_center"
-        app:layout_constraintBottom_toBottomOf="@id/restaurant_star_3"
-        app:layout_constraintLeft_toLeftOf="@id/restaurant_star_3"
-        app:layout_constraintRight_toRightOf="@id/restaurant_star_3"
-        app:layout_constraintTop_toTopOf="@id/restaurant_star_3" />
+        app:layout_constraintBottom_toBottomOf="@id/restaurant_star_3_background"
+        app:layout_constraintLeft_toLeftOf="@id/restaurant_star_3_background"
+        app:layout_constraintRight_toRightOf="@id/restaurant_star_3_background"
+        app:layout_constraintTop_toTopOf="@id/restaurant_star_3_background" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/restaurant_star_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="restaurant_star_1_background,restaurant_star_1_center"/>
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/restaurant_star_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="restaurant_star_2_background,restaurant_star_2_center"/>
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/restaurant_star_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="restaurant_star_3_background,restaurant_star_3_center"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
