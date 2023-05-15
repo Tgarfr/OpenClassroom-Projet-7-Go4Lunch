@@ -34,6 +34,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private RestaurantDetailActivityViewModel viewModel;
     private Restaurant restaurant;
     private Workmate userWorkmate;
+    private boolean vote;
     private WorkmateListItemListAdapter adapter;
     private ImageView validButton;
 
@@ -42,30 +43,35 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_detail);
-
         viewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(RestaurantDetailActivityViewModel.class);
-        restaurant = viewModel.getRestaurantFromId(getIntent().getExtras().getLong("restaurantId"));
-        viewModel.getRestaurantWorkmateVoteLiveData().observe(this, restaurantWorkmateVotes -> updateLikeButton());
-
+        getRestaurant();
         getUserWorkmate();
-        setData();
-        updateLikeButton();
-        configureWorkmateList();
+    }
 
-        viewModel.getWorkmateListLiveData().observe(this, workmateList -> {
-            userWorkmate = viewModel.getWorkmateFromUid(userWorkmate.getUid());
-            adapter.submitList(viewModel.getWorkmateListItemList(restaurant));
+    private void getRestaurant() {
+        viewModel.getRestaurantLiveData(getIntent().getExtras().getLong("restaurantId")).observe(this, restaurant -> {
+            if (restaurant != null) {
+                setData(restaurant);
+            }
         });
     }
 
     private void getUserWorkmate() {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null) {
-            userWorkmate = viewModel.getWorkmateFromUid(firebaseUser.getUid());
+            viewModel.getUserWorkmateLiveData(firebaseUser.getUid()).observe(this, workmate -> {
+                userWorkmate = workmate;
+                if (restaurant != null) {
+                    configureLikeButton();
+                    configureValidButton();
+                    configureWorkmateList();
+                }
+            });
         }
     }
 
-    private void setData() {
+    private void setData(@NonNull Restaurant restaurant) {
+        this.restaurant = restaurant;
         TextView nameTextView = findViewById(R.id.activity_restaurant_detail_name);
         nameTextView.setText(restaurant.getName());
 
@@ -96,11 +102,9 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         }
         findViewById(R.id.detail_restaurant_like_button).setOnClickListener(onClickLikeIcon);
 
-        validButton = findViewById(R.id.activity_restaurant_detail_valid_button);
-        if (userWorkmate.getRestaurantSelectedUid() != null &&  userWorkmate.getRestaurantSelectedUid() == restaurant.getId()) {
-            validButton.setColorFilter(getResources().getColor(R.color.detail_activity_valid_button_green));
-        }
-        validButton.setOnClickListener(onClickValidButton);
+        configureLikeButton();
+        configureValidButton();
+        configureWorkmateList();
     }
 
     private final  View.OnClickListener onClickCallIcon = new View.OnClickListener() {
@@ -118,7 +122,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private final View.OnClickListener onClickLikeIcon = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (viewModel.getRestaurantWorkmateVote(userWorkmate.getUid(), restaurant.getId())) {
+            if (vote) {
                 viewModel.removeRestaurantWorkmateVote(userWorkmate.getUid(), restaurant.getId());
             } else {
                 viewModel.setRestaurantWorkmateVote(userWorkmate.getUid(), restaurant.getId());
@@ -150,12 +154,48 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         }
     };
 
-    public void configureWorkmateList() {
-        adapter = new WorkmateListItemListAdapter(DIFF_CALLBACK,context);
-        adapter.submitList(viewModel.getWorkmateListItemList(restaurant));
-        RecyclerView recyclerView = findViewById(R.id.detail_restaurant_recyclerview);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerView.setAdapter(adapter);
+    private void configureWorkmateList() {
+        if (restaurant != null && userWorkmate != null) {
+            adapter = new WorkmateListItemListAdapter(DIFF_CALLBACK,context);
+            viewModel.getWorkmateListItemLiveData(restaurant.getId()).observe(this, workmateListItems -> adapter.submitList(workmateListItems));
+            RecyclerView recyclerView = findViewById(R.id.detail_restaurant_recyclerview);
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            recyclerView.setAdapter(adapter);
+        }
+    }
+
+    private void configureValidButton() {
+        if (restaurant != null && userWorkmate != null) {
+            validButton = findViewById(R.id.activity_restaurant_detail_valid_button);
+            if (userWorkmate.getRestaurantSelectedUid() != null &&  userWorkmate.getRestaurantSelectedUid() == restaurant.getId()) {
+                validButton.setColorFilter(getResources().getColor(R.color.detail_activity_valid_button_green));
+            }
+            validButton.setOnClickListener(onClickValidButton);
+        }
+    }
+
+    private void configureLikeButton() {
+        if (restaurant != null && userWorkmate != null) {
+            viewModel.getRestaurantWorkmateVoteLiveData(userWorkmate.getUid(), restaurant.getId()).observe(this, restaurantWorkmateVote -> {
+                vote = restaurantWorkmateVote;
+                updateLikeButton();
+            });
+        }
+    }
+
+    private void updateLikeButton() {
+        if (restaurant != null && userWorkmate != null) {
+            ImageView likeIcon = findViewById(R.id.detail_restaurant_like_icon);
+            if (vote) {
+                likeIcon.setColorFilter(getResources().getColor(R.color.detail_restaurant_activity_item_disable));
+                TextView likeText = findViewById(R.id.detail_restaurant_like_text);
+                likeText.setTextColor(getResources().getColor(R.color.detail_restaurant_activity_item_disable));
+            } else {
+                likeIcon.setColorFilter(getResources().getColor(R.color.primary_color));
+                TextView likeText = findViewById(R.id.detail_restaurant_like_text);
+                likeText.setTextColor(getResources().getColor(R.color.primary_color));
+            }
+        }
     }
 
     public static final DiffUtil.ItemCallback<WorkmateListItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<WorkmateListItem>() {
@@ -175,20 +215,6 @@ public class RestaurantDetailActivity extends AppCompatActivity {
             return false;
         }
         return true;
-    }
-
-    private void updateLikeButton() {
-        if (viewModel.getRestaurantWorkmateVote(userWorkmate.getUid(), restaurant.getId())) {
-            ImageView likeIcon = findViewById(R.id.detail_restaurant_like_icon);
-            likeIcon.setColorFilter(getResources().getColor(R.color.detail_restaurant_activity_item_disable));
-            TextView likeText = findViewById(R.id.detail_restaurant_like_text);
-            likeText.setTextColor(getResources().getColor(R.color.detail_restaurant_activity_item_disable));
-        } else {
-            ImageView likeIcon = findViewById(R.id.detail_restaurant_like_icon);
-            likeIcon.setColorFilter(getResources().getColor(R.color.primary_color));
-            TextView likeText = findViewById(R.id.detail_restaurant_like_text);
-            likeText.setTextColor(getResources().getColor(R.color.primary_color));
-        }
     }
 
     @NonNull
