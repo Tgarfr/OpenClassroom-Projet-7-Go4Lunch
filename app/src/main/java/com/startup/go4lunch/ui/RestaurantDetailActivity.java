@@ -20,8 +20,6 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.startup.go4lunch.R;
 import com.startup.go4lunch.di.ViewModelFactory;
 import com.startup.go4lunch.model.Restaurant;
@@ -57,17 +55,14 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     }
 
     private void getUserWorkmate() {
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (firebaseUser != null) {
-            viewModel.getUserWorkmateLiveData(firebaseUser.getUid()).observe(this, workmate -> {
-                userWorkmate = workmate;
-                if (restaurant != null) {
-                    configureLikeButton();
-                    configureValidButton();
-                    configureWorkmateList();
-                }
-            });
-        }
+        viewModel.getUserWorkmateLiveData().observe(this, workmate -> {
+            userWorkmate = workmate;
+            if (restaurant != null) {
+                configureLikeButton();
+                configureValidButton();
+                configureWorkmateList();
+            }
+        });
     }
 
     private void setData(@NonNull Restaurant restaurant) {
