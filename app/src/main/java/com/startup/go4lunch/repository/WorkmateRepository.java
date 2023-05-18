@@ -64,20 +64,6 @@ public class WorkmateRepository {
         return workmateListResearched;
     }
 
-    @NonNull
-    public List<Workmate> getWorkmateListFromRestaurant(long restaurantUid) {
-        List<Workmate> workmateList = workmateListLiveData.getValue();
-        List<Workmate> workmateListResearched = new ArrayList<>();
-        if (workmateList != null) {
-            for (Workmate workmate: workmateList) {
-                if (workmate.getRestaurantSelectedUid() != null && workmate.getRestaurantSelectedUid() == restaurantUid) {
-                    workmateListResearched.add(workmate);
-                }
-            }
-        }
-        return workmateListResearched;
-    }
-
     public void setRestaurantSelectedToWorkmate(@NonNull String workmateUid,@Nullable Long restaurantSelectedUid) {
         workmateApi.setWorkmateRestaurantSelectedUid(workmateUid, restaurantSelectedUid);
     }
