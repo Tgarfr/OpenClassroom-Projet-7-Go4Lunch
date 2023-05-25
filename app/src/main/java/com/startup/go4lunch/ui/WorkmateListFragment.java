@@ -1,6 +1,5 @@
 package com.startup.go4lunch.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +7,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
@@ -17,10 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.startup.go4lunch.R;
 import com.startup.go4lunch.di.ViewModelFactory;
-import com.startup.go4lunch.model.Restaurant;
 import com.startup.go4lunch.model.WorkmateListItem;
 
-public class WorkmateListFragment extends Fragment implements WorkmateListItemListAdapter.WorkmateListItemListAdapterInterface {
+public class WorkmateListFragment extends Fragment {
 
     private WorkmateListItemListAdapter adapter;
 
@@ -34,7 +31,7 @@ public class WorkmateListFragment extends Fragment implements WorkmateListItemLi
 
         viewModel.getWorkmateListSearchStringLiveData().observe(getViewLifecycleOwner(), string -> adapter.submitList(viewModel.getWorkmateListItemList()));
 
-        adapter = new WorkmateListItemListAdapter(DIFF_CALLBACK,requireContext(),this);
+        adapter = new WorkmateListItemListAdapter(DIFF_CALLBACK,requireContext());
         adapter.submitList(viewModel.getWorkmateListItemList());
         RecyclerView recyclerView = view.findViewById(R.id.recyclerview_list_workmate);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -54,11 +51,4 @@ public class WorkmateListFragment extends Fragment implements WorkmateListItemLi
             return oldItem.equals(newItem);
         }
     };
-
-    @Override
-    public void clickOnRestaurant(@NonNull Restaurant restaurant) {
-        Intent intent = new Intent(requireContext(), RestaurantDetailActivity.class);
-        intent.putExtra("restaurantId",restaurant.getId());
-        ActivityCompat.startActivity(requireActivity(), intent, null);
-    }
 }
