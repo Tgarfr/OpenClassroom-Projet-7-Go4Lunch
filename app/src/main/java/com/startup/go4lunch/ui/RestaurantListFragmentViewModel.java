@@ -9,8 +9,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.startup.go4lunch.model.Restaurant;
 import com.startup.go4lunch.model.RestaurantListItem;
-import com.startup.go4lunch.model.Workmate;
 import com.startup.go4lunch.model.RestaurantWorkmateVote;
+import com.startup.go4lunch.model.Workmate;
 import com.startup.go4lunch.repository.LocationRepository;
 import com.startup.go4lunch.repository.RestaurantRepository;
 import com.startup.go4lunch.repository.SearchRepository;

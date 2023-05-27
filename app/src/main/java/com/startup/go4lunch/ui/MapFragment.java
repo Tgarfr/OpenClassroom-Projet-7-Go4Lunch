@@ -1,8 +1,9 @@
 package com.startup.go4lunch.ui;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -13,45 +14,45 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
 import com.startup.go4lunch.R;
 import com.startup.go4lunch.di.ViewModelFactory;
 import com.startup.go4lunch.model.Restaurant;
+import com.startup.go4lunch.model.RestaurantMapMarker;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Overlay;
 
 import java.util.List;
 
 public class MapFragment extends Fragment {
 
+    private final static int LOCATION_REQUEST_CODE = 1;
     private Context context;
     private MapFragmentViewModel viewModel;
     private MapView mapView;
-    private LiveData<Location> locationLiveData;
-    private LiveData<String> searchLiveData;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
-        viewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(MapFragmentViewModel.class);
         context = requireContext();
 
-        locationLiveData = viewModel.getLocationLiveData();
-        locationLiveData.observe(getViewLifecycleOwner(), location -> updateCenterLocation());
-
-        viewModel.getRestaurantListLiveData().observe(getViewLifecycleOwner(), RestaurantListLiveDataObserver);
-
-        searchLiveData = viewModel.getSearchStringLivedata();
-        searchLiveData.observe(getViewLifecycleOwner(), s -> updateCenterLocation() );
+        viewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(MapFragmentViewModel.class);
+        viewModel.getMapCenterLocationLiveData().observe(getViewLifecycleOwner(),
+                location -> mapView.getController().setCenter(new GeoPoint(location.getLatitude(), location.getLongitude())) );
+        viewModel.getRestaurantMapMarkerListLiveData().observe(getViewLifecycleOwner(), restaurantMapMarkerListLiveDataObserver);
 
         Configuration.getInstance().setUserAgentValue(context.getPackageName());
         mapView = view.findViewById(R.id.map_view);
@@ -62,8 +63,8 @@ public class MapFragment extends Fragment {
 
         view.findViewById(R.id.map_compass_button).setOnClickListener(v -> {
             viewModel.setEndSearch();
-            updateCenterLocation();
-        });
+            getCurrentLocation();
+        } );
 
         return view;
     }
@@ -82,50 +83,34 @@ public class MapFragment extends Fragment {
         super.onPause();
     }
 
-    Observer<List<Restaurant>> RestaurantListLiveDataObserver = new Observer<List<Restaurant>>() {
+    Observer<List<RestaurantMapMarker>> restaurantMapMarkerListLiveDataObserver = new Observer<List<RestaurantMapMarker>>() {
         @Override
-        public void onChanged(List<Restaurant> restaurantList) {
-            for (Restaurant restaurant: restaurantList) {
-                Marker marker = new Marker(mapView);
-                marker.setIcon(AppCompatResources.getDrawable(context,R.mipmap.icon_map_restaurant));
-                marker.setTitle(restaurant.getName());
-                marker.setPosition(new GeoPoint(restaurant.getLatitude(),restaurant.getLongitude()));
-                marker.setRelatedObject(restaurant.getId());
-                marker.setOnMarkerClickListener(onMarkerClickListener);
-                mapView.getOverlays().add(marker);
+        public void onChanged(List<RestaurantMapMarker> restaurantMapMarkerList) {
+            List<Overlay> overlayList= mapView.getOverlays();
+            for (Overlay overlay: overlayList) {
+                if (overlay instanceof Marker) {
+                    overlayList.remove(overlay);
+                }
             }
-            updateCenterLocation();
+            if (restaurantMapMarkerList != null) {
+                for (RestaurantMapMarker restaurantMapMarker: restaurantMapMarkerList) {
+                    Restaurant restaurant = restaurantMapMarker.getRestaurant();
+                    Marker marker = new Marker(mapView);
+                    marker.setRelatedObject(restaurant.getId());
+                    marker.setTitle(restaurant.getName());
+                    marker.setPosition(new GeoPoint(restaurant.getLatitude(),restaurant.getLongitude()));
+                    marker.setIcon(AppCompatResources.getDrawable(context,R.mipmap.icon_map_restaurant_marker));
+                    marker.setOnMarkerClickListener(onMarkerClickListener);
+                    if (restaurantMapMarker.getWorkmateLunchOnRestaurant()) {
+                        marker.setIcon(AppCompatResources.getDrawable(context,R.mipmap.icon_map_restaurant_marker_green));
+                    } else {
+                        marker.setIcon(AppCompatResources.getDrawable(context,R.mipmap.icon_map_restaurant_marker));
+                    }
+                    overlayList.add(marker);
+                }
+            }
         }
     };
-
-    private void updateCenterLocation() {
-        String search = searchLiveData.getValue();
-        if (search == null) {
-            centerToCurrentLocation();
-        } else {
-            Restaurant searchRestaurant = viewModel.getRestaurantFromString(search);
-            if (searchRestaurant != null) {
-                centerToRestaurantLocation(searchRestaurant);
-            } else {
-                centerToCurrentLocation();
-            }
-        }
-    }
-
-    private void centerToCurrentLocation() {
-        Location currentLocation = locationLiveData.getValue();
-        if (currentLocation != null) {
-            centerToLocation(currentLocation.getLatitude(), currentLocation.getLongitude());
-        }
-    }
-
-    private void centerToRestaurantLocation(@NonNull Restaurant restaurant) {
-        centerToLocation(restaurant.getLatitude(), restaurant.getLongitude());
-    }
-
-    private void centerToLocation(double latitude, double longitude) {
-        mapView.getController().setCenter(new GeoPoint(latitude, longitude));
-    }
 
     private final Marker.OnMarkerClickListener onMarkerClickListener = (marker, mapView) -> {
         Intent intent = new Intent(requireContext(), RestaurantDetailActivity.class);
@@ -133,5 +118,22 @@ public class MapFragment extends Fragment {
         ActivityCompat.startActivity(requireActivity(), intent, null);
         return false;
     };
+
+    private void getCurrentLocation() {
+        if (!checkLocationPermission()) {
+            return;
+        }
+        FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity());
+        fusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+                .addOnSuccessListener(location -> viewModel.updateLocation(location));
+    }
+
+    private boolean checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+            return false;
+        }
+        return true;
+    }
 }
 
