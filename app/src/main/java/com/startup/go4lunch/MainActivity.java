@@ -40,6 +40,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.startup.go4lunch.di.ViewModelFactory;
 import com.startup.go4lunch.ui.MainActivityViewModel;
 import com.startup.go4lunch.ui.RestaurantDetailActivity;
+import com.startup.go4lunch.ui.SettingsDialogFragment;
 import com.startup.go4lunch.ui.ViewPagerAdapter;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -240,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (id) {
             case YOUR_LUNCH_RESOURCE_ID: goToRestaurantDetailActivity();
                 break;
-            case SETTING_RESOURCE_ID: // TODO
+            case SETTING_RESOURCE_ID: new SettingsDialogFragment().show(getSupportFragmentManager(), null);
                 break;
             case LOGOUT_RESOURCE_ID: logout();
                 break;

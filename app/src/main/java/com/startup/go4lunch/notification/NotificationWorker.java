@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
@@ -28,26 +29,28 @@ public class NotificationWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        String message = getInputData().getString("message");
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("go4lunch-preferences", Context.MODE_PRIVATE);
+        if (sharedPreferences.getBoolean("notification-set",true)) {
+            String message = getInputData().getString("message");
 
-        NotificationCompat.Builder notification =
-                new NotificationCompat.Builder(getApplicationContext(), NOTIFICATION_ID_CHANNEL)
-                        .setSmallIcon(R.drawable.icon_notification)
-                        .setContentTitle(NOTIFICATION_TITLE)
-                        .setContentText(message)
-                        .setPriority(NotificationCompat.PRIORITY_HIGH);
+            NotificationCompat.Builder notification =
+                    new NotificationCompat.Builder(getApplicationContext(), NOTIFICATION_ID_CHANNEL)
+                            .setSmallIcon(R.drawable.icon_notification)
+                            .setContentTitle(NOTIFICATION_TITLE)
+                            .setContentText(message)
+                            .setPriority(NotificationCompat.PRIORITY_HIGH);
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_ID_CHANNEL, NOTIFICATION_TITLE, NotificationManager.IMPORTANCE_HIGH);
-            notificationManager.createNotificationChannel(notificationChannel);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_ID_CHANNEL, NOTIFICATION_TITLE, NotificationManager.IMPORTANCE_HIGH);
+                notificationManager.createNotificationChannel(notificationChannel);
+            }
+
+            if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+                notificationManager.notify(1, notification.build());
+            }
         }
-
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
-            notificationManager.notify(1, notification.build());
-        }
-
         return Result.success();
     }
 }
