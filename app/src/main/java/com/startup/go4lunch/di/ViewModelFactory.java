@@ -6,11 +6,13 @@ import androidx.lifecycle.ViewModelProvider;
 import com.startup.go4lunch.repository.LocationRepository;
 import com.startup.go4lunch.repository.RestaurantRepository;
 import com.startup.go4lunch.repository.SearchRepository;
+import com.startup.go4lunch.repository.SharedPreferencesRepository;
 import com.startup.go4lunch.repository.WorkmateRepository;
 import com.startup.go4lunch.ui.MainActivityViewModel;
 import com.startup.go4lunch.ui.MapFragmentViewModel;
 import com.startup.go4lunch.ui.RestaurantDetailActivityViewModel;
 import com.startup.go4lunch.ui.RestaurantListFragmentViewModel;
+import com.startup.go4lunch.ui.SettingsDialogFragmentViewModel;
 import com.startup.go4lunch.ui.WorkmateListFragmentViewModel;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
@@ -20,12 +22,14 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     private final LocationRepository locationRepository;
     private final SearchRepository searchRepository;
     private final WorkmateRepository workmateRepository;
+    private final SharedPreferencesRepository sharedPreferencesRepository;
 
     private ViewModelFactory() {
         this.restaurantRepository = Injection.getRestaurantRepository();
         this.locationRepository = new LocationRepository();
         this.searchRepository = new SearchRepository();
         this.workmateRepository = Injection.getWorkmateRepository();
+        this.sharedPreferencesRepository = new SharedPreferencesRepository();
     }
 
     public static ViewModelFactory getInstance() {
@@ -57,6 +61,9 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         }
         if (modelClass.isAssignableFrom(RestaurantDetailActivityViewModel.class)) {
             return (T) new RestaurantDetailActivityViewModel(restaurantRepository, workmateRepository);
+        }
+        if (modelClass.isAssignableFrom(SettingsDialogFragmentViewModel.class)) {
+            return (T) new SettingsDialogFragmentViewModel(sharedPreferencesRepository);
         }
         throw new IllegalArgumentException("Unknown ViewModel class");
     }
