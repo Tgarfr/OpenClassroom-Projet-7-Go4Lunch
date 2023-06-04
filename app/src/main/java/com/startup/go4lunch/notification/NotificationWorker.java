@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
@@ -16,21 +15,23 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.startup.go4lunch.R;
+import com.startup.go4lunch.repository.SharedPreferencesRepository;
 
 public class NotificationWorker extends Worker {
 
     private static final String NOTIFICATION_TITLE = "G4Lunch : Your restaurant today";
     private static final String NOTIFICATION_ID_CHANNEL = "Notification G4Lunch";
+    private final SharedPreferencesRepository sharedPreferencesRepository;
 
     public NotificationWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
+        sharedPreferencesRepository  = new SharedPreferencesRepository();
     }
 
     @NonNull
     @Override
     public Result doWork() {
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("go4lunch-preferences", Context.MODE_PRIVATE);
-        if (sharedPreferences.getBoolean("notification-set",true)) {
+        if (sharedPreferencesRepository.getNotificationSettingBoolean(getApplicationContext())) {
             String message = getInputData().getString("message");
 
             NotificationCompat.Builder notification =
