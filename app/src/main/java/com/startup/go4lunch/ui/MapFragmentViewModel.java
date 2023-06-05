@@ -29,18 +29,40 @@ public class MapFragmentViewModel extends ViewModel {
     private final WorkmateRepository workmateRepository;
     private final MutableLiveData<Location> mapCenterLocationLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<RestaurantMapMarker>> restaurantMapMarkerListLiveData = new MutableLiveData<>();
+    private final Observer<List<Restaurant>> restaurantListObserver;
+    private final Observer<List<Workmate>> workmateListObserver;
 
-
-    public MapFragmentViewModel(@NonNull LocationRepository locationRepository, @NonNull RestaurantRepository restaurantRepository, @NonNull SearchRepository searchRepository,@NonNull WorkmateRepository workmateRepository) {
+    public MapFragmentViewModel(@NonNull LocationRepository locationRepository, @NonNull RestaurantRepository restaurantRepository, @NonNull SearchRepository searchRepository, @NonNull WorkmateRepository workmateRepository) {
         this.locationRepository = locationRepository;
         this.restaurantRepository = restaurantRepository;
         this.searchRepository = searchRepository;
         this.workmateRepository = workmateRepository;
 
-        locationRepository.getLocationLiveData().observeForever(locationObserver);
-        searchRepository.getMapFragmentSearchLivedata().observeForever(searchObserver);
-        restaurantRepository.getRestaurantListLiveData().observeForever(restaurantListObserver);
-        workmateRepository.getWorkmateListLiveData().observeForever(workmateListObserver);
+        restaurantListObserver = restaurantList -> {
+            if (restaurantList != null) {
+                List<Workmate> workmateList = workmateRepository.getWorkmateListLiveData().getValue();
+                List<RestaurantMapMarker> restaurantMapMarkerList = new ArrayList<>();
+                for (Restaurant restaurant : restaurantList) {
+                    restaurantMapMarkerList.add(new RestaurantMapMarker(restaurant, isRestaurantSelectedByAnyoneForLunch(restaurant.getId(), workmateList)));
+                }
+                restaurantMapMarkerListLiveData.setValue(restaurantMapMarkerList);
+            }
+        };
+
+        workmateListObserver = workmatesList -> {
+            List<RestaurantMapMarker> restaurantMapMarkerList = restaurantMapMarkerListLiveData.getValue();
+            if (restaurantMapMarkerList != null) {
+                for(RestaurantMapMarker restaurantMapMarker: restaurantMapMarkerList) {
+                    restaurantMapMarker.setWorkmateLunchOnRestaurant(isRestaurantSelectedByAnyoneForLunch(restaurantMapMarker.getRestaurant().getId(), workmatesList));
+                }
+            }
+            restaurantMapMarkerListLiveData.setValue(restaurantMapMarkerList);
+        };
+
+        this.locationRepository.getLocationLiveData().observeForever(locationObserver);
+        this.searchRepository.getMapFragmentSearchLivedata().observeForever(searchObserver);
+        this.restaurantRepository.getRestaurantListLiveData().observeForever(restaurantListObserver);
+        this.workmateRepository.getWorkmateListLiveData().observeForever(workmateListObserver);
     }
 
     @Override
@@ -90,26 +112,6 @@ public class MapFragmentViewModel extends ViewModel {
         });
     }
 
-    private final Observer<List<Restaurant>> restaurantListObserver = restaurantList -> {
-        List<RestaurantMapMarker> restaurantMapMarkerList = new ArrayList<>();
-        if (restaurantList != null) {
-            for (Restaurant restaurant : restaurantList) {
-                restaurantMapMarkerList.add(new RestaurantMapMarker(restaurant, workmateLunchOnRestaurant(restaurant.getId())));
-            }
-        }
-        restaurantMapMarkerListLiveData.setValue(restaurantMapMarkerList);
-    };
-
-    private final Observer<List<Workmate>> workmateListObserver = workmatesList -> {
-        List<RestaurantMapMarker> restaurantMapMarkerList = restaurantMapMarkerListLiveData.getValue();
-        if (restaurantMapMarkerList != null) {
-            for(RestaurantMapMarker restaurantMapMarker: restaurantMapMarkerList) {
-                restaurantMapMarker.setWorkmateLunchOnRestaurant(workmateLunchOnRestaurant(restaurantMapMarker.getRestaurant().getId()));
-            }
-        }
-        restaurantMapMarkerListLiveData.setValue(restaurantMapMarkerList);
-    };
-
     public void setEndSearch() {
         searchRepository.setMapFragmentSearch(null);
     }
@@ -119,8 +121,7 @@ public class MapFragmentViewModel extends ViewModel {
         return restaurantRepository.getRestaurantResearchedFromString(string);
     }
 
-    private boolean workmateLunchOnRestaurant(long restaurantUid) {
-        List<Workmate> workmateList = workmateRepository.getWorkmateListLiveData().getValue();
+    private boolean isRestaurantSelectedByAnyoneForLunch(long restaurantUid, @Nullable List<Workmate> workmateList) {
         if (workmateList != null) {
             for (Workmate workmate : workmateList) {
                 if (workmate.getRestaurantSelectedUid() != null) {
