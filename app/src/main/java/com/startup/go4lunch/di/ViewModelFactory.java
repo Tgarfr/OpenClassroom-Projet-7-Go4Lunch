@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.startup.go4lunch.repository.LocationRepository;
 import com.startup.go4lunch.repository.RestaurantRepository;
 import com.startup.go4lunch.repository.SearchRepository;
-import com.startup.go4lunch.repository.SharedPreferencesRepository;
+import com.startup.go4lunch.repository.SettingsRepository;
 import com.startup.go4lunch.repository.WorkmateRepository;
 import com.startup.go4lunch.ui.MainActivityViewModel;
 import com.startup.go4lunch.ui.MapFragmentViewModel;
@@ -22,14 +22,14 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     private final LocationRepository locationRepository;
     private final SearchRepository searchRepository;
     private final WorkmateRepository workmateRepository;
-    private final SharedPreferencesRepository sharedPreferencesRepository;
+    private final SettingsRepository settingsRepository;
 
     private ViewModelFactory() {
         this.restaurantRepository = Injection.getRestaurantRepository();
         this.locationRepository = new LocationRepository();
         this.searchRepository = new SearchRepository();
         this.workmateRepository = Injection.getWorkmateRepository();
-        this.sharedPreferencesRepository = new SharedPreferencesRepository();
+        this.settingsRepository = new SettingsRepository();
     }
 
     public static ViewModelFactory getInstance() {
@@ -63,7 +63,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             return (T) new RestaurantDetailActivityViewModel(restaurantRepository, workmateRepository);
         }
         if (modelClass.isAssignableFrom(SettingsDialogFragmentViewModel.class)) {
-            return (T) new SettingsDialogFragmentViewModel(sharedPreferencesRepository);
+            return (T) new SettingsDialogFragmentViewModel(settingsRepository);
         }
         throw new IllegalArgumentException("Unknown ViewModel class");
     }

@@ -15,23 +15,23 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.startup.go4lunch.R;
-import com.startup.go4lunch.repository.SharedPreferencesRepository;
+import com.startup.go4lunch.repository.SettingsRepository;
 
 public class NotificationWorker extends Worker {
 
     private static final String NOTIFICATION_TITLE = "G4Lunch : Your restaurant today";
     private static final String NOTIFICATION_ID_CHANNEL = "Notification G4Lunch";
-    private final SharedPreferencesRepository sharedPreferencesRepository;
+    private final SettingsRepository settingsRepository;
 
     public NotificationWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
-        sharedPreferencesRepository  = new SharedPreferencesRepository();
+        settingsRepository = new SettingsRepository();
     }
 
     @NonNull
     @Override
     public Result doWork() {
-        if (sharedPreferencesRepository.getNotificationSettingBoolean(getApplicationContext())) {
+        if (settingsRepository.getAreNotificationsEnable(getApplicationContext())) {
             String message = getInputData().getString("message");
 
             NotificationCompat.Builder notification =
