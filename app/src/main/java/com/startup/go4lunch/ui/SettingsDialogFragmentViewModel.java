@@ -5,22 +5,22 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 
-import com.startup.go4lunch.repository.SharedPreferencesRepository;
+import com.startup.go4lunch.repository.SettingsRepository;
 
 public class SettingsDialogFragmentViewModel extends ViewModel {
 
-    private final SharedPreferencesRepository sharedPreferencesRepository;
+    private final SettingsRepository settingsRepository;
 
-    public SettingsDialogFragmentViewModel(@NonNull SharedPreferencesRepository sharedPreferencesRepository) {
-        this.sharedPreferencesRepository = sharedPreferencesRepository;
+    public SettingsDialogFragmentViewModel(@NonNull SettingsRepository settingsRepository) {
+        this.settingsRepository = settingsRepository;
     }
 
-    public void setNotificationSettingBoolean(@NonNull Context context, boolean value) {
-        sharedPreferencesRepository.setNotificationSettingBoolean(context, value);
+    public void setAreNotificationsEnable(@NonNull Context context, boolean value) {
+        settingsRepository.setAreNotificationsEnable(context, value);
     }
 
-    public boolean getNotificationSettingBoolean(@NonNull Context context) {
-        return sharedPreferencesRepository.getNotificationSettingBoolean(context);
+    public boolean getAreNotificationsEnable(@NonNull Context context) {
+        return settingsRepository.getAreNotificationsEnable(context);
     }
 
 }
