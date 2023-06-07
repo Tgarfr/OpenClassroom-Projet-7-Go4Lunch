@@ -1,7 +1,10 @@
 package com.startup.go4lunch.ui;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.startup.go4lunch.model.Workmate;
@@ -18,28 +21,43 @@ public class WorkmateListFragmentViewModel extends ViewModel {
     private final RestaurantRepository restaurantRepository;
     private final WorkmateRepository workmateRepository;
     private final SearchRepository searchRepository;
+    private final MutableLiveData<List<WorkmateListItem>> workmateListItemListLiveData = new MutableLiveData<>();
+    private final Observer<List<Workmate>> workmateListObserver;
+    private final Observer<String> searchObserver;
 
     public WorkmateListFragmentViewModel(@NonNull WorkmateRepository workmateRepository,@NonNull RestaurantRepository restaurantRepository,@NonNull SearchRepository searchRepository) {
         this.restaurantRepository = restaurantRepository;
         this.workmateRepository = workmateRepository;
         this.searchRepository = searchRepository;
+
+        workmateListObserver = this::getWorkmateListItemList;
+        searchObserver = string -> {
+            if (string != null) {
+                getWorkmateListItemList(workmateRepository.getWorkmateListResearchedFromString(string));
+            } else {
+                getWorkmateListItemList(workmateRepository.getWorkmateListLiveData().getValue());
+            }
+        };
+
+        workmateRepository.getWorkmateListLiveData().observeForever(workmateListObserver);
+        searchRepository.getWorkmateListFragmentSearchLiveData().observeForever(searchObserver);
+    }
+
+    @Override
+    protected void onCleared() {
+        workmateRepository.getWorkmateListLiveData().removeObserver(workmateListObserver);
+        searchRepository.getWorkmateListFragmentSearchLiveData().removeObserver(searchObserver);
+        super.onCleared();
     }
 
     @NonNull
-    public LiveData<List<Workmate>> getWorkmateListLiveData() {
-        return workmateRepository.getWorkmateListLiveData();
+    public LiveData<List<WorkmateListItem>> getWorkmateListLiveData() {
+        return workmateListItemListLiveData;
     }
 
-    @NonNull
-    public List<WorkmateListItem> getWorkmateListItemList() {
-        List<Workmate> workmateList;
-        if (searchRepository.getWorkmateListFragmentSearchLiveData().getValue() == null) {
-            workmateList = workmateRepository.getWorkmateListLiveData().getValue();
-        } else {
-            workmateList = workmateRepository.getWorkmateListResearchedFromString(searchRepository.getWorkmateListFragmentSearchLiveData().getValue());
-        }
-        List<WorkmateListItem> workmateListItemList = new ArrayList<>();
+    public void getWorkmateListItemList(@Nullable List<Workmate> workmateList) {
         if (workmateList != null) {
+            List<WorkmateListItem> workmateListItemList = new ArrayList<>();
             for (Workmate workmate: workmateList) {
                 int displayTextType;
                 if (workmate.getRestaurantSelectedUid() == null) {
@@ -50,12 +68,7 @@ public class WorkmateListFragmentViewModel extends ViewModel {
                     workmateListItemList.add(new WorkmateListItem(workmate,restaurantRepository.getRestaurantFromId(workmate.getRestaurantSelectedUid()), displayTextType));
                 }
             }
+            workmateListItemListLiveData.setValue(workmateListItemList);
         }
-        return workmateListItemList;
-    }
-
-    @NonNull
-    public LiveData<String> getWorkmateListSearchStringLiveData() {
-        return searchRepository.getWorkmateListFragmentSearchLiveData();
     }
 }

@@ -30,12 +30,9 @@ public class WorkmateListFragment extends Fragment implements WorkmateListItemLi
         View view = inflater.inflate(R.layout.fragment_list_workmate, container, false);
         WorkmateListFragmentViewModel viewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(WorkmateListFragmentViewModel.class);
 
-        viewModel.getWorkmateListLiveData().observe(getViewLifecycleOwner(), workmateList -> adapter.submitList(viewModel.getWorkmateListItemList()));
-
-        viewModel.getWorkmateListSearchStringLiveData().observe(getViewLifecycleOwner(), string -> adapter.submitList(viewModel.getWorkmateListItemList()));
-
         adapter = new WorkmateListItemListAdapter(DIFF_CALLBACK,requireContext(),this);
-        adapter.submitList(viewModel.getWorkmateListItemList());
+        viewModel.getWorkmateListLiveData().observe(getViewLifecycleOwner(), workmateListItem -> adapter.submitList(workmateListItem));
+
         RecyclerView recyclerView = view.findViewById(R.id.recyclerview_list_workmate);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
