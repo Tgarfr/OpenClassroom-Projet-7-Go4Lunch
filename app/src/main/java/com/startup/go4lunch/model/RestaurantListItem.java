@@ -8,13 +8,13 @@ import java.util.Comparator;
 public class RestaurantListItem {
 
     private final Restaurant restaurant;
-    private int distance;
-    private int numberOfWorkmate;
-    private int score;
+    private final int distance;
+    private final int numberOfWorkmate;
+    private final int score;
     public static final int SORT_BY_NAME = 1;
     public static final int SORT_BY_DISTANCE = 2;
     public static final int SORT_BY_TYPE = 3;
-    public static final int SORT_BY_NOTE = 4;
+    public static final int SORT_BY_SCORE = 4;
 
     public RestaurantListItem(@NonNull Restaurant restaurant, int distance, int numberOfWorkmate, int score) {
         this.restaurant = restaurant;
@@ -38,18 +38,6 @@ public class RestaurantListItem {
 
     public int getScore() {
         return score;
-    }
-
-    public void setDistance(int distance) {
-        this.distance = distance;
-    }
-
-    public void setNumberOfWorkmate(int numberOfWorkmate) {
-        this.numberOfWorkmate = numberOfWorkmate;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
     }
 
     @Override
@@ -86,19 +74,19 @@ public class RestaurantListItem {
                 return 0;
             }
             if (o1.getRestaurant().getType() == null) {
-                return 1;
+                return -1;
             }
             if (o2.getRestaurant().getType() == null) {
-                return -1;
+                return 1;
             }
             return o1.getRestaurant().getType().compareTo(o2.getRestaurant().getType());
         }
     }
 
-    public static class RestaurantListItemRateComparator implements Comparator<RestaurantListItem> {
+    public static class RestaurantListItemScoreComparator implements Comparator<RestaurantListItem> {
         @Override
         public int compare(RestaurantListItem o1, RestaurantListItem o2) {
-            return (int) (o1.getScore() - o2.getScore());
+            return o2.getScore() - o1.getScore();
         }
     }
 }

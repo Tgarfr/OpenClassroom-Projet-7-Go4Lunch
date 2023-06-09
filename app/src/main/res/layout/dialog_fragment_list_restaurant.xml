@@ -23,9 +23,9 @@
         android:text="@string/restaurant_list_sort_by_type" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/restaurant_list_sort_by_note"
+        android:id="@+id/restaurant_list_sort_by_score"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/restaurant_list_sort_by_rate" />
+        android:text="@string/restaurant_list_sort_by_score" />
 
 </LinearLayout>
