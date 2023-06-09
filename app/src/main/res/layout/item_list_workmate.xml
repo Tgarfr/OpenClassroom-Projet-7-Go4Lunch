@@ -28,7 +28,7 @@
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="1"
-        android:text="@string/workmate_list_text_example"
+        android:text="@string/workmate_list_item_text_joining"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/item_list_workmate_avatar"
         app:layout_constraintTop_toTopOf="parent" />

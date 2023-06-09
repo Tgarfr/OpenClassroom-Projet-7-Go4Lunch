@@ -1,0 +1,71 @@
+<resources>
+    <string name="app_name">Go4Lunch</string>
+    <string name="restaurant_picture">Photo du restaurant</string>
+
+    // Menu
+    <string name="tab_map">Carte</string>
+    <string name="tab_restaurant">Restaurants</string>
+    <string name="tab_workmate">Collègues</string>
+    <string name="open_street_map">Open Street Map</string>
+
+    // Navigation Drawer
+    <string name="your_lunch">VOTRE RESTAURANT</string>
+    <string name="settings">PARAMETRES</string>
+    <string name="logout">DECONNECTION</string>
+    <string name="navigation_drawer_open">Ouvrir le menu latéral</string>
+    <string name="navigation_drawer_close">Fermer le menu latéral</string>
+    <string name="info_no_username_found">Nom</string>
+    <string name="info_no_email_found">Email</string>
+    <string name="avatar">Avatar</string>
+    <string name="navigation_drawer_logo">Logo</string>
+
+    // Restaurant Detail
+    <string name="restaurant_detail_restaurant_name">Nom du restaurant</string>
+    <string name="restaurant_detail_picture">Photo du restaurant</string>
+    <string name="restaurant_detail_description_of_the_restaurant">Description du restaurant</string>
+    <string name="restaurant_detail_valid_button">Bouton valider</string>
+    <string name="restaurant_detail_workmate_list_avatar">Avatar du collègue</string>
+    <string name="restaurant_detail_workmate_list_text">Le collégue y va!</string>
+    <string name="restaurant_detail_call">APPEL</string>
+    <string name="restaurant_detail_like">AIMER</string>
+    <string name="restaurant_detail_website">SITE INTERNET</string>
+
+    // Restaurant List
+    <string name="restaurant_list_name">Nom du restaurant</string>
+    <string name="restaurant_list_address">Adresse</string>
+    <string name="restaurant_list_opening_time">Horaires d\'ouvertures</string>
+    <string name="restaurant_list_distance">120 m</string>
+    <string name="restaurant_list_number_of_workmate">(3)</string>
+    <string name="restaurant_list_sort_by_name">Trier par nom</string>
+    <string name="restaurant_list_sort_by_distance">Trier par distance</string>
+    <string name="restaurant_list_sort_by_type">Trier par type</string>
+    <string name="restaurant_list_sort_by_score">Trier par évaluation</string>
+
+    // Workmate List
+    <string name="workmate_list_avatar">Avatar</string>
+    <string name="workmate_list_item_text_eating">%s mange %s ( %s )</string>
+    <string name="workmate_list_item_text_not_decided">%s n\'a pas encore décidé</string>
+    <string name="workmate_list_item_text_joining">%s y va!</string>
+
+    // Search menu
+    <string name="search_menu">Menu de recherche</string>
+    <string name="search_menu_restaurant">Rechercher restaurant</string>
+    <string name="search_menu_workmate">Rechercher collègue</string>
+
+    // Login Activity
+    <string name="login_activity_restaurant_picture">Restaurant</string>
+    <string name="login_activity_slogan">Trouve un bon restaurant et invite tes collègues à manger!</string>
+    <string name="login_activity_google_button_text">Connecte-toi avec Google</string>
+    <string name="login_activity_facebook_button_text">Connecte-toi avec Facebook</string>
+    <string name="login_activity_logo">Logo</string>
+
+    // Notification
+    <string name="notification_message">%s, %s %s</string>
+    <string name="notification_workmates">avec %s.</string>
+
+    // Settings menu
+    <string name="dialog_fragment_setting_title">PARAMETRES</string>
+    <string name="dialog_fragment_settings_notification">Notification de restaurant</string>
+    <string name="dialog_fragment_settings_ok_button">OK</string>
+
+</resources>
