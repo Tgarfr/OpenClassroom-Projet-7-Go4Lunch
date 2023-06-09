@@ -39,7 +39,7 @@
     <string name="restaurant_list_sort_by_name">Sort by name</string>
     <string name="restaurant_list_sort_by_distance">Sort by distance</string>
     <string name="restaurant_list_sort_by_type">Sort by type</string>
-    <string name="restaurant_list_sort_by_rate">Sort by rate</string>
+    <string name="restaurant_list_sort_by_score">Sort by score</string>
 
     // Workmate List
     <string name="workmate_list_avatar">Avatar</string>

@@ -23,7 +23,7 @@ public class RestaurantListSortDialogFragment extends DialogFragment {
         view.findViewById(R.id.restaurant_list_sort_by_name).setOnClickListener(v -> returnSortMethod(RestaurantListItem.SORT_BY_NAME));
         view.findViewById(R.id.restaurant_list_sort_by_distance).setOnClickListener(v -> returnSortMethod(RestaurantListItem.SORT_BY_DISTANCE));
         view.findViewById(R.id.restaurant_list_sort_by_type).setOnClickListener(v -> returnSortMethod(RestaurantListItem.SORT_BY_TYPE));
-        view.findViewById(R.id.restaurant_list_sort_by_note).setOnClickListener(v -> returnSortMethod(RestaurantListItem.SORT_BY_NOTE));
+        view.findViewById(R.id.restaurant_list_sort_by_score).setOnClickListener(v -> returnSortMethod(RestaurantListItem.SORT_BY_SCORE));
 
         builder.setView(view);
         return builder.create();
