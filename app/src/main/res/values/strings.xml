@@ -43,7 +43,6 @@
 
     // Workmate List
     <string name="workmate_list_avatar">Avatar</string>
-    <string name="workmate_list_text_example">WorkmateName is eating french (Restaurant Example)</string>
     <string name="workmate_list_item_text_eating">%s is eating %s ( %s )</string>
     <string name="workmate_list_item_text_not_decided">%s hasn\'t decided yet</string>
     <string name="workmate_list_item_text_joining">%s is joining!</string>
