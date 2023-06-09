@@ -33,11 +33,10 @@ public class RestaurantListFragment extends Fragment implements RestaurantListAd
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list_restaurant, container, false);
         viewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(RestaurantListFragmentViewModel.class);
-        viewModel.setLiveDataObserver(getViewLifecycleOwner());
-        viewModel.getRestaurantListItemLiveData().observe(getViewLifecycleOwner(), restaurantListItem -> restaurantListAdapter.submitList(new ArrayList<>(restaurantListItem)) );
 
         restaurantListAdapter = new RestaurantListAdapter(DIFF_CALLBACK, this);
-        restaurantListAdapter.submitList(viewModel.getRestaurantListItemLiveData().getValue());
+        viewModel.getRestaurantListItemListLiveData().observe(getViewLifecycleOwner(), restaurantListItem -> restaurantListAdapter.submitList(restaurantListItem) );
+
         RecyclerView recyclerView = view.findViewById(R.id.list_restaurant_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(restaurantListAdapter);
