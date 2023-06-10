@@ -8,7 +8,6 @@ import com.startup.go4lunch.api.WorkmateApi;
 import com.startup.go4lunch.model.RestaurantWorkmateVote;
 import com.startup.go4lunch.model.Workmate;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -48,20 +47,6 @@ public class WorkmateRepository {
             }
         }
         return null;
-    }
-
-    @NonNull
-    public List<Workmate> getWorkmateListResearchedFromString(@NonNull String string) {
-        List<Workmate> workmateList = workmateListLiveData.getValue();
-        List<Workmate> workmateListResearched = new ArrayList<>();
-        if (workmateList != null) {
-            for (Workmate workmate: workmateList) {
-                if (workmate.getName().toLowerCase().contains(string.toLowerCase())) {
-                    workmateListResearched.add(workmate);
-                }
-            }
-        }
-        return workmateListResearched;
     }
 
     public void setRestaurantSelectedToWorkmate(@NonNull String workmateUid,@Nullable Long restaurantSelectedUid) {
