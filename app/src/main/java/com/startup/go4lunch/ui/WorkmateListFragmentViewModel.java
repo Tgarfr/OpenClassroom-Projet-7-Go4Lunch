@@ -30,13 +30,14 @@ public class WorkmateListFragmentViewModel extends ViewModel {
         this.workmateRepository = workmateRepository;
         this.searchRepository = searchRepository;
 
-        workmateListObserver = this::getWorkmateListItemList;
-        searchObserver = string -> {
-            if (string != null) {
-                getWorkmateListItemList(workmateRepository.getWorkmateListResearchedFromString(string));
-            } else {
-                getWorkmateListItemList(workmateRepository.getWorkmateListLiveData().getValue());
-            }
+        workmateListObserver = workmateList -> {
+            List<Workmate> filteredWorkmateList = filterByName(workmateList, searchRepository.getWorkmateListFragmentSearchLiveData().getValue());
+            workmateListItemListLiveData.setValue(convertToWorkmateItemList(filteredWorkmateList));
+        };
+
+        searchObserver = searchString -> {
+            List<Workmate> filteredWorkmateList = filterByName(workmateRepository.getWorkmateListLiveData().getValue(), searchString);
+            workmateListItemListLiveData.setValue(convertToWorkmateItemList(filteredWorkmateList));
         };
 
         workmateRepository.getWorkmateListLiveData().observeForever(workmateListObserver);
@@ -55,7 +56,15 @@ public class WorkmateListFragmentViewModel extends ViewModel {
         return workmateListItemListLiveData;
     }
 
-    public void getWorkmateListItemList(@Nullable List<Workmate> workmateList) {
+    @Nullable
+    private List<Workmate> filterByName(@Nullable List<Workmate> workmateList,@Nullable String searchString) {
+        if (searchString != null) {
+            return getWorkmateListResearchedFromString(workmateList, searchString);
+        }
+        return workmateList;
+    }
+
+    private List<WorkmateListItem> convertToWorkmateItemList(@Nullable List<Workmate> workmateList) {
         if (workmateList != null) {
             List<WorkmateListItem> workmateListItemList = new ArrayList<>();
             for (Workmate workmate: workmateList) {
@@ -68,7 +77,21 @@ public class WorkmateListFragmentViewModel extends ViewModel {
                     workmateListItemList.add(new WorkmateListItem(workmate,restaurantRepository.getRestaurantFromId(workmate.getRestaurantSelectedUid()), displayTextType));
                 }
             }
-            workmateListItemListLiveData.setValue(workmateListItemList);
+            return workmateListItemList;
         }
+        return null;
+    }
+
+    @NonNull
+    private List<Workmate> getWorkmateListResearchedFromString(@Nullable List<Workmate> workmateList, @NonNull String string) {
+        List<Workmate> workmateListResearched = new ArrayList<>();
+        if (workmateList != null) {
+            for (Workmate workmate: workmateList) {
+                if (workmate.getName().toLowerCase().contains(string.toLowerCase())) {
+                    workmateListResearched.add(workmate);
+                }
+            }
+        }
+        return workmateListResearched;
     }
 }
