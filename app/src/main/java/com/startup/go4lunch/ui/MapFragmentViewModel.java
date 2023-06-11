@@ -84,6 +84,14 @@ public class MapFragmentViewModel extends ViewModel {
         return restaurantMapMarkerListLiveData;
     }
 
+    public void updateLocation(Location location) {
+        if (location == null) {
+            location = LocationRepository.getCompanyLocation();
+        }
+        locationRepository.setLocation(location);
+        restaurantRepository.updateLocationRestaurantList(location);
+    }
+
     private final Observer<Location> locationObserver = location -> {
         if (getRestaurantToCenterOnLiveData().getValue() == null) {
             mapCenterLocationLiveData.setValue(location);
@@ -94,7 +102,7 @@ public class MapFragmentViewModel extends ViewModel {
         if (string != null) {
             Restaurant restaurant = getRestaurantFromString(string);
             if (restaurant != null) {
-                Location location =new Location(restaurant.getName());
+                Location location = new Location(restaurant.getName());
                 location.setLatitude(restaurant.getLatitude());
                 location.setLongitude(restaurant.getLongitude());
                 mapCenterLocationLiveData.setValue(location);
@@ -132,13 +140,5 @@ public class MapFragmentViewModel extends ViewModel {
             }
         }
         return false;
-    }
-
-    public void updateLocation(Location location) {
-        if (location == null) {
-            location = LocationRepository.getCompanyLocation();
-        }
-        locationRepository.setLocation(location);
-        restaurantRepository.updateLocationRestaurantList(location);
     }
 }
