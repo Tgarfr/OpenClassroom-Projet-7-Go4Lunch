@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.startup.go4lunch.model.Restaurant;
 import com.startup.go4lunch.model.RestaurantWorkmateVote;
@@ -23,12 +22,15 @@ public class RestaurantDetailActivityViewModel extends ViewModel {
 
     private final RestaurantRepository restaurantRepository;
     private final WorkmateRepository workmateRepository;
-    private final FirebaseUser firebaseUser;
+    private FirebaseUser firebaseUser;
 
     public RestaurantDetailActivityViewModel(@NonNull RestaurantRepository restaurantRepository,@NonNull WorkmateRepository workmateRepository) {
         this.restaurantRepository = restaurantRepository;
         this.workmateRepository = workmateRepository;
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+    }
+
+    public void setFirebaseUser(@Nullable FirebaseUser firebaseUser) {
+        this.firebaseUser = firebaseUser;
     }
 
     @NonNull
