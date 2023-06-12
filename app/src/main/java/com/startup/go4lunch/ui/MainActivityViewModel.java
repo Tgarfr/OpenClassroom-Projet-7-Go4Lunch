@@ -53,11 +53,11 @@ public class MainActivityViewModel extends ViewModel {
         workmateRepository.createWorkmate(workmate);
     }
 
-    public long getWorkmateRestaurantSelectedUid(@NonNull String workmateUid) {
+    public Long getWorkmateRestaurantSelectedUid(@NonNull String workmateUid) {
         Workmate workmate = workmateRepository.getWorkmateFromUid(workmateUid);
         if (workmate != null) {
             return workmate.getRestaurantSelectedUid();
         }
-        return 0;
+        return null;
     }
 }
