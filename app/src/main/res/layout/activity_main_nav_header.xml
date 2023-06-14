@@ -39,25 +39,14 @@
         android:id="@+id/activity_main_nav_view_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="20dp"
         android:text="@string/info_no_username_found"
         android:textColor="@color/text_menu"
-        android:textSize="14sp"
+        android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/activity_main_nav_view_email"
+        app:layout_constraintBottom_toBottomOf="@id/activity_main_nav_view_avatar"
         app:layout_constraintLeft_toRightOf="@id/activity_main_nav_view_avatar"
         app:layout_constraintTop_toTopOf="@id/activity_main_nav_view_avatar" />
 
-    <TextView
-        android:id="@+id/activity_main_nav_view_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:text="@string/info_no_email_found"
-        android:textColor="@color/text_menu"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@id/activity_main_nav_view_avatar"
-        app:layout_constraintLeft_toRightOf="@id/activity_main_nav_view_avatar"
-        app:layout_constraintTop_toBottomOf="@id/activity_main_nav_view_name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

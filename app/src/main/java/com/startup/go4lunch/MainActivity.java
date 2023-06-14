@@ -229,9 +229,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             String name = TextUtils.isEmpty(firebaseUser.getDisplayName()) ? getString(R.string.info_no_username_found) : firebaseUser.getDisplayName();
             TextView nameTextView = header.findViewById(R.id.activity_main_nav_view_name);
             nameTextView.setText(name);
-            String email = TextUtils.isEmpty(firebaseUser.getEmail()) ? getString(R.string.info_no_email_found) : firebaseUser.getEmail();
-            TextView emailTextView = header.findViewById(R.id.activity_main_nav_view_email);
-            emailTextView.setText(email);
         }
     }
 
