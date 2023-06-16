@@ -1,6 +1,7 @@
 package com.startup.go4lunch.ui;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -42,7 +43,9 @@ public class MapFragment extends Fragment {
     private Context context;
     private MapFragmentViewModel viewModel;
     private MapView mapView;
+    private boolean isRestaurantDetailActivityOpen = false;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -60,6 +63,10 @@ public class MapFragment extends Fragment {
         mapView.getController().setZoom(18D);
         mapView.setMultiTouchControls(true);
         mapView.setDestroyMode(false);
+        mapView.setOnTouchListener((v, event) -> {
+            v.getParent().requestDisallowInterceptTouchEvent(true);
+            return false;
+        });
 
         view.findViewById(R.id.map_compass_button).setOnClickListener(v -> {
             viewModel.setEndSearch();
@@ -74,6 +81,7 @@ public class MapFragment extends Fragment {
         super.onResume();
         mapView.onResume();
         Configuration.getInstance().load(context,PreferenceManager.getDefaultSharedPreferences(context));
+        isRestaurantDetailActivityOpen = false;
     }
 
     @Override
@@ -83,7 +91,7 @@ public class MapFragment extends Fragment {
         super.onPause();
     }
 
-    Observer<List<RestaurantMapMarker>> restaurantMapMarkerListLiveDataObserver = new Observer<List<RestaurantMapMarker>>() {
+    private final Observer<List<RestaurantMapMarker>> restaurantMapMarkerListLiveDataObserver = new Observer<List<RestaurantMapMarker>>() {
         @Override
         public void onChanged(List<RestaurantMapMarker> restaurantMapMarkerList) {
             List<Overlay> overlayList= mapView.getOverlays();
@@ -109,13 +117,17 @@ public class MapFragment extends Fragment {
                     overlayList.add(marker);
                 }
             }
+            mapView.invalidate();
         }
     };
 
-    private final Marker.OnMarkerClickListener onMarkerClickListener = (marker, mapView) -> {
-        Intent intent = new Intent(requireContext(), RestaurantDetailActivity.class);
-        intent.putExtra("restaurantId", (long) marker.getRelatedObject());
-        ActivityCompat.startActivity(requireActivity(), intent, null);
+    private final Marker.OnMarkerClickListener onMarkerClickListener = (clickedMarker, mapView) -> {
+        if (!isRestaurantDetailActivityOpen) {
+            Intent intent = new Intent(requireContext(), RestaurantDetailActivity.class);
+            intent.putExtra("restaurantId", (long) clickedMarker.getRelatedObject());
+            ActivityCompat.startActivity(requireActivity(), intent, null);
+            isRestaurantDetailActivityOpen = true;
+        }
         return false;
     };
 

@@ -7,7 +7,6 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.startup.go4lunch.model.Restaurant;
@@ -31,6 +30,9 @@ public class MapFragmentViewModel extends ViewModel {
     private final MutableLiveData<List<RestaurantMapMarker>> restaurantMapMarkerListLiveData = new MutableLiveData<>();
     private final Observer<List<Restaurant>> restaurantListObserver;
     private final Observer<List<Workmate>> workmateListObserver;
+    private final Observer<String> searchObserver;
+    private final Observer<Location> locationObserver;
+    private Location location;
 
     public MapFragmentViewModel(@NonNull LocationRepository locationRepository, @NonNull RestaurantRepository restaurantRepository, @NonNull SearchRepository searchRepository, @NonNull WorkmateRepository workmateRepository) {
         this.locationRepository = locationRepository;
@@ -57,6 +59,25 @@ public class MapFragmentViewModel extends ViewModel {
                 }
             }
             restaurantMapMarkerListLiveData.setValue(restaurantMapMarkerList);
+        };
+
+        searchObserver = string -> {
+            if (string != null) {
+                Restaurant restaurant = getRestaurantFromString(string);
+                if (restaurant != null) {
+                    Location location = new Location(restaurant.getName());
+                    location.setLatitude(restaurant.getLatitude());
+                    location.setLongitude(restaurant.getLongitude());
+                    mapCenterLocationLiveData.setValue(location);
+                }
+            }
+        };
+
+        locationObserver = location -> {
+            if (this.location == null && searchRepository.getMapFragmentSearchLivedata().getValue() == null) {
+                mapCenterLocationLiveData.setValue(location);
+                this.location = location;
+            }
         };
 
         this.locationRepository.getLocationLiveData().observeForever(locationObserver);
@@ -90,34 +111,8 @@ public class MapFragmentViewModel extends ViewModel {
         }
         locationRepository.setLocation(location);
         restaurantRepository.updateLocationRestaurantList(location);
-    }
-
-    private final Observer<Location> locationObserver = location -> {
-        if (getRestaurantToCenterOnLiveData().getValue() == null) {
-            mapCenterLocationLiveData.setValue(location);
-        }
-    };
-
-    private final Observer<String> searchObserver = string -> {
-        if (string != null) {
-            Restaurant restaurant = getRestaurantFromString(string);
-            if (restaurant != null) {
-                Location location = new Location(restaurant.getName());
-                location.setLatitude(restaurant.getLatitude());
-                location.setLongitude(restaurant.getLongitude());
-                mapCenterLocationLiveData.setValue(location);
-            }
-        }
-    };
-
-    @NonNull
-    private LiveData<Restaurant> getRestaurantToCenterOnLiveData() {
-        return Transformations.map(searchRepository.getMapFragmentSearchLivedata(), string -> {
-            if (string != null) {
-                return restaurantRepository.getRestaurantResearchedFromString(string);
-            }
-            return null;
-        });
+        mapCenterLocationLiveData.setValue(location);
+        this.location = location;
     }
 
     public void setEndSearch() {
