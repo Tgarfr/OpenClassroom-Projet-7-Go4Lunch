@@ -22,14 +22,11 @@ public class RestaurantDetailActivityViewModel extends ViewModel {
 
     private final RestaurantRepository restaurantRepository;
     private final WorkmateRepository workmateRepository;
-    private FirebaseUser firebaseUser;
+    private final FirebaseUser firebaseUser;
 
-    public RestaurantDetailActivityViewModel(@NonNull RestaurantRepository restaurantRepository,@NonNull WorkmateRepository workmateRepository) {
+    public RestaurantDetailActivityViewModel(@NonNull RestaurantRepository restaurantRepository, @NonNull WorkmateRepository workmateRepository, @NonNull FirebaseUser firebaseUser) {
         this.restaurantRepository = restaurantRepository;
         this.workmateRepository = workmateRepository;
-    }
-
-    public void setFirebaseUser(@Nullable FirebaseUser firebaseUser) {
         this.firebaseUser = firebaseUser;
     }
 

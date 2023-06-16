@@ -24,7 +24,6 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.startup.go4lunch.R;
 import com.startup.go4lunch.di.ViewModelFactory;
 import com.startup.go4lunch.model.Restaurant;
@@ -53,7 +52,6 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_detail);
         viewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(RestaurantDetailActivityViewModel.class);
-        viewModel.setFirebaseUser(FirebaseAuth.getInstance().getCurrentUser());
         getRestaurant();
         getUserWorkmate();
     }

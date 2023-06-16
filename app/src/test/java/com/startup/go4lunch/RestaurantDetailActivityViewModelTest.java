@@ -48,15 +48,15 @@ public class RestaurantDetailActivityViewModelTest {
     private FirebaseUser firebaseUser;
 
     private Workmate user;
+
     private RestaurantDetailActivityViewModel restaurantDetailActivityViewModel;
 
     @Before
     public void setUp() {
-        restaurantDetailActivityViewModel = new RestaurantDetailActivityViewModel(restaurantRepository, workmateRepository);
-
         user = FAKE_WORKMATE_LIST.get(1);
         when(firebaseUser.getUid()).thenReturn(user.getUid());
-        restaurantDetailActivityViewModel.setFirebaseUser(firebaseUser);
+
+        restaurantDetailActivityViewModel = new RestaurantDetailActivityViewModel(restaurantRepository, workmateRepository, firebaseUser);
 
         when(restaurantRepository.getRestaurantListLiveData()).thenReturn(new MutableLiveData<>(FAKE_RESTAURANTS_LIST));
         when(workmateRepository.getWorkmateListLiveData()).thenReturn(new MutableLiveData<>(FAKE_WORKMATE_LIST));

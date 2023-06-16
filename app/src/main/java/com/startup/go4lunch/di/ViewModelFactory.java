@@ -3,6 +3,7 @@ package com.startup.go4lunch.di;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.startup.go4lunch.repository.LocationRepository;
 import com.startup.go4lunch.repository.RestaurantRepository;
 import com.startup.go4lunch.repository.SearchRepository;
@@ -23,6 +24,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     private final SearchRepository searchRepository;
     private final WorkmateRepository workmateRepository;
     private final SettingsRepository settingsRepository;
+    private final FirebaseUser firebaseUser;
 
     private ViewModelFactory() {
         this.restaurantRepository = Injection.getRestaurantRepository();
@@ -30,6 +32,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         this.searchRepository = new SearchRepository();
         this.workmateRepository = Injection.getWorkmateRepository();
         this.settingsRepository = new SettingsRepository();
+        this.firebaseUser = Injection.getFirebaseUser();
     }
 
     public static ViewModelFactory getInstance() {
@@ -60,7 +63,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             return (T) new WorkmateListFragmentViewModel(workmateRepository, restaurantRepository, searchRepository);
         }
         if (modelClass.isAssignableFrom(RestaurantDetailActivityViewModel.class)) {
-            return (T) new RestaurantDetailActivityViewModel(restaurantRepository, workmateRepository);
+            return (T) new RestaurantDetailActivityViewModel(restaurantRepository, workmateRepository, firebaseUser);
         }
         if (modelClass.isAssignableFrom(SettingsDialogFragmentViewModel.class)) {
             return (T) new SettingsDialogFragmentViewModel(settingsRepository);
