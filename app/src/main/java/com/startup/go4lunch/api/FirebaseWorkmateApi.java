@@ -32,7 +32,13 @@ public class FirebaseWorkmateApi implements WorkmateApi {
 
     @Override
     public void createWorkmate(@NonNull Workmate workmate) {
-        collectionWorkmates.document(workmate.getUid()).set(workmate, SetOptions.mergeFields("name","avatarUri"));
+        collectionWorkmates.document(workmate.getUid()).get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                collectionWorkmates.document(workmate.getUid()).set(workmate, SetOptions.mergeFields("name","avatarUri"));
+            } else {
+                collectionWorkmates.document(workmate.getUid()).set(workmate);
+            }
+        });
     }
 
     @Override
