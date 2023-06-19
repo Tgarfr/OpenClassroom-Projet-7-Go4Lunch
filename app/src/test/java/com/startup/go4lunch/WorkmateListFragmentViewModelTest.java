@@ -47,6 +47,7 @@ public class WorkmateListFragmentViewModelTest {
     public void setUp() {
         when(workmateRepository.getWorkmateListLiveData()).thenReturn(new MutableLiveData<>(FAKE_WORKMATE_LIST));
         when(searchRepository.getWorkmateListFragmentSearchLiveData()).thenReturn(new MutableLiveData<>(null));
+        when(restaurantRepository.getRestaurantListLiveData()).thenReturn(new MutableLiveData<>(FAKE_RESTAURANTS_LIST));
         when(restaurantRepository.getRestaurantFromId(FAKE_RESTAURANTS_LIST.get(2).getId())).thenReturn(FAKE_RESTAURANTS_LIST.get(2));
         when(restaurantRepository.getRestaurantFromId(FAKE_RESTAURANTS_LIST.get(3).getId())).thenReturn(FAKE_RESTAURANTS_LIST.get(3));
 
