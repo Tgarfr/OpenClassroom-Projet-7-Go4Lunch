@@ -7,6 +7,8 @@ import static org.mockito.Mockito.when;
 
 import android.net.Uri;
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+
 import com.google.firebase.auth.FirebaseUser;
 import com.startup.go4lunch.model.Workmate;
 import com.startup.go4lunch.repository.LocationRepository;
@@ -16,6 +18,7 @@ import com.startup.go4lunch.repository.WorkmateRepository;
 import com.startup.go4lunch.ui.MainActivityViewModel;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -27,6 +30,9 @@ import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MainActivityViewModelTest {
+
+    @Rule
+    public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
 
     @Mock
     private RestaurantRepository restaurantRepository;

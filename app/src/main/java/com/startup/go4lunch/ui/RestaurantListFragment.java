@@ -21,8 +21,6 @@ import com.startup.go4lunch.di.ViewModelFactory;
 import com.startup.go4lunch.model.Restaurant;
 import com.startup.go4lunch.model.RestaurantListItem;
 
-import java.util.ArrayList;
-
 public class RestaurantListFragment extends Fragment implements RestaurantListAdapter.RestaurantListAdapterInterface {
 
     private RestaurantListFragmentViewModel viewModel;

@@ -42,7 +42,6 @@
         app:layout_constraintTop_toBottomOf="@id/login_activity_app_logo" />
 
     <TextView
-        android:id="@+id/login_activity_slogan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/login_activity_slogan"

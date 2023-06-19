@@ -15,7 +15,6 @@
     <string name="navigation_drawer_open">Ouvrir le menu latéral</string>
     <string name="navigation_drawer_close">Fermer le menu latéral</string>
     <string name="info_no_username_found">Nom</string>
-    <string name="info_no_email_found">Email</string>
     <string name="avatar">Avatar</string>
     <string name="navigation_drawer_logo">Logo</string>
 

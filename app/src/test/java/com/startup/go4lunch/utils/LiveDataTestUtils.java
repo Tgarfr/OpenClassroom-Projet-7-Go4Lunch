@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 public class LiveDataTestUtils {
 
+    @SuppressWarnings("unchecked")
     public static <T> T getValue(final LiveData<T> liveData) throws InterruptedException {
 
         final Object[] data = new Object[1];

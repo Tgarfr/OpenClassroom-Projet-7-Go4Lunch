@@ -18,7 +18,7 @@ import com.startup.go4lunch.model.RestaurantListItem;
 
 public class RestaurantListAdapter extends ListAdapter<RestaurantListItem, RestaurantListAdapter.ViewHolder> {
 
-    RestaurantListAdapterInterface restaurantListAdapterInterface;
+    private final RestaurantListAdapterInterface restaurantListAdapterInterface;
 
     interface RestaurantListAdapterInterface {
         void clickOnRestaurant(@NonNull Restaurant restaurant);
@@ -58,15 +58,15 @@ public class RestaurantListAdapter extends ListAdapter<RestaurantListItem, Resta
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView restaurantName;
-        public TextView restaurantAdress;
-        public TextView restaurantOpeningTime;
-        public TextView restaurantDistance;
-        public TextView numberOfWorkmate;
-        public ConstraintLayout restaurantItem;
-        public Group star1;
-        public Group star2;
-        public Group star3;
+        public final TextView restaurantName;
+        public final TextView restaurantAdress;
+        public final TextView restaurantOpeningTime;
+        public final TextView restaurantDistance;
+        public final TextView numberOfWorkmate;
+        public final ConstraintLayout restaurantItem;
+        public final Group star1;
+        public final Group star2;
+        public final Group star3;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

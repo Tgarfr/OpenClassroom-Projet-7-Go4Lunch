@@ -7,6 +7,7 @@ public class RestaurantWorkmateVote {
     private String workmateUid;
     private long restaurantUid;
 
+    @SuppressWarnings("unused")
     public RestaurantWorkmateVote() {}
 
     public RestaurantWorkmateVote(@NonNull String workmateUid, long restaurantUid) {

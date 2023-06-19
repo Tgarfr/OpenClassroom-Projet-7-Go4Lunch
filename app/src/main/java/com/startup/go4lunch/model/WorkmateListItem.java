@@ -6,7 +6,6 @@ import androidx.annotation.Nullable;
 public class WorkmateListItem {
 
     private final Workmate workmate;
-
     private final Restaurant restaurantChoice;
     private final int displayTextType;
     public static final int DISPLAY_TEXT_EATING = 1;

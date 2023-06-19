@@ -23,9 +23,9 @@ import com.startup.go4lunch.model.WorkmateListItem;
 
 public class WorkmateListItemListAdapter extends ListAdapter<WorkmateListItem, WorkmateListItemListAdapter.ViewHolder> {
 
-    Context context;
-    Resources resources;
-    WorkmateListItemListAdapterInterface workmateListItemListAdapterInterface;
+    private final Context context;
+    private final Resources resources;
+    private final WorkmateListItemListAdapterInterface workmateListItemListAdapterInterface;
 
     interface WorkmateListItemListAdapterInterface {
         void clickOnRestaurant(@NonNull Restaurant restaurant);
@@ -80,8 +80,8 @@ public class WorkmateListItemListAdapter extends ListAdapter<WorkmateListItem, W
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView workmateText;
-        public ImageView workmateAvatar;
+        public final TextView workmateText;
+        public final ImageView workmateAvatar;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

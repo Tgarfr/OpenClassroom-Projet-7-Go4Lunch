@@ -20,7 +20,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class OverpassRestaurantApi implements RestaurantApi, Callback<OverpassGsonObject> {
 
-    MutableLiveData<List<Restaurant>> restaurantListLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<Restaurant>> restaurantListLiveData = new MutableLiveData<>();
 
     private final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://overpass-api.de/")

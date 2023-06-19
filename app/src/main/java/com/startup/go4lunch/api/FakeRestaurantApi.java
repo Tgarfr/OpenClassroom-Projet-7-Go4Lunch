@@ -10,6 +10,7 @@ import com.startup.go4lunch.model.Restaurant;
 import java.util.Arrays;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class FakeRestaurantApi implements RestaurantApi {
 
     private final MutableLiveData<List<Restaurant>> restaurantListLiveData = new MutableLiveData<>(FAKE_RESTAURANTS_LIST);

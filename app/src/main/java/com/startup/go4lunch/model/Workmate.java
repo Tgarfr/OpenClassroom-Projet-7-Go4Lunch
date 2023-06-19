@@ -53,6 +53,6 @@ public class Workmate {
         return workmate.getUid().equals(getUid()) &&
                 workmate.getName().equals(getName()) &&
                 Objects.equals(workmate.getAvatarUri(), getAvatarUri()) &&
-                workmate.getRestaurantSelectedUid() == getRestaurantSelectedUid();
+                Objects.equals(workmate.getRestaurantSelectedUid(), getRestaurantSelectedUid());
     }
 }

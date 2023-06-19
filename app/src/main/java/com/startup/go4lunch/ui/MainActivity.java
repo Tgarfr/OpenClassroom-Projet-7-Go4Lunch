@@ -1,4 +1,4 @@
-package com.startup.go4lunch;
+package com.startup.go4lunch.ui;
 
 import android.Manifest;
 import android.app.SearchManager;
@@ -37,11 +37,8 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.startup.go4lunch.R;
 import com.startup.go4lunch.di.ViewModelFactory;
-import com.startup.go4lunch.ui.MainActivityViewModel;
-import com.startup.go4lunch.ui.RestaurantDetailActivity;
-import com.startup.go4lunch.ui.SettingsDialogFragment;
-import com.startup.go4lunch.ui.ViewPagerAdapter;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
