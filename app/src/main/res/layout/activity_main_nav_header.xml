@@ -8,12 +8,12 @@
         android:id="@+id/activity_restaurant_detail_picture"
         android:layout_width="match_parent"
         android:layout_height="300dp"
+        android:contentDescription="@string/restaurant_picture"
         android:scaleType="centerCrop"
         android:src="@drawable/restaurant_picture_default"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:contentDescription="@string/restaurant_picture"/>
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:layout_width="wrap_content"

@@ -28,6 +28,7 @@
     <string name="restaurant_detail_call">APPEL</string>
     <string name="restaurant_detail_like">AIMER</string>
     <string name="restaurant_detail_website">SITE INTERNET</string>
+    <string name="restaurant_detail_type_not_provided">Type non spécifié</string>
 
     // Restaurant List
     <string name="restaurant_list_name">Nom du restaurant</string>

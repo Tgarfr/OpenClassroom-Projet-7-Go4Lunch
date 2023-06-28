@@ -1,5 +1,6 @@
 package com.startup.go4lunch.ui;
 
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,14 +20,16 @@ import com.startup.go4lunch.model.RestaurantListItem;
 public class RestaurantListAdapter extends ListAdapter<RestaurantListItem, RestaurantListAdapter.ViewHolder> {
 
     private final RestaurantListAdapterInterface restaurantListAdapterInterface;
+    private final Resources resources;
 
     interface RestaurantListAdapterInterface {
         void clickOnRestaurant(@NonNull Restaurant restaurant);
     }
 
-    protected RestaurantListAdapter(@NonNull DiffUtil.ItemCallback<RestaurantListItem> diffCallback,@NonNull RestaurantListAdapterInterface restaurantListAdapterInterface) {
+    protected RestaurantListAdapter(@NonNull DiffUtil.ItemCallback<RestaurantListItem> diffCallback, @NonNull RestaurantListAdapterInterface restaurantListAdapterInterface, @NonNull Resources resources) {
         super(diffCallback);
         this.restaurantListAdapterInterface = restaurantListAdapterInterface;
+        this.resources = resources;
     }
 
     @NonNull
@@ -42,11 +45,18 @@ public class RestaurantListAdapter extends ListAdapter<RestaurantListItem, Resta
         RestaurantListItem restaurantListItem = getCurrentList().get(position);
         Restaurant restaurant = restaurantListItem.getRestaurant();
 
+        final String typeString;
+        if (restaurant.getType() == null) {
+            typeString = resources.getString(R.string.restaurant_detail_type_not_provided);
+        } else {
+            typeString = setCapitalFistChar(restaurant.getType());
+        }
+
         holder.restaurantName.setText(restaurant.getName());
-        holder.restaurantAdress.setText(String.format("%s - %s",restaurant.getType(),restaurant.getAddress()));
+        holder.restaurantAdress.setText(String.format("%s - %s" ,typeString ,restaurant.getAddress()));
         holder.restaurantOpeningTime.setText(restaurant.getOpeningTime());
-        holder.restaurantDistance.setText(String.format("%sm",restaurantListItem.getDistance()));
-        holder.numberOfWorkmate.setText(String.format("(%s)",restaurantListItem.getNumberOfWorkmate()));
+        holder.restaurantDistance.setText(String.format("%sm" ,restaurantListItem.getDistance()));
+        holder.numberOfWorkmate.setText(String.format("(%s)" ,restaurantListItem.getNumberOfWorkmate()));
 
         int score = restaurantListItem.getScore();
         if (score >= 1) holder.star1.setVisibility(View.VISIBLE); else holder.star1.setVisibility(View.INVISIBLE);
@@ -81,5 +91,12 @@ public class RestaurantListAdapter extends ListAdapter<RestaurantListItem, Resta
             star3 = itemView.findViewById(R.id.restaurant_star_3);
             restaurantItem = (ConstraintLayout) itemView;
         }
+    }
+
+    @NonNull
+    public String setCapitalFistChar(@NonNull String string) {
+        char[] char_table = string.toCharArray();
+        char_table[0] = Character.toUpperCase(char_table[0]);
+        return new String(char_table);
     }
 }

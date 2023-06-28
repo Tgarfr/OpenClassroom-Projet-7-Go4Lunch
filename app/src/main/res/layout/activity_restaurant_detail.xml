@@ -9,12 +9,12 @@
         android:id="@+id/activity_restaurant_detail_picture"
         android:layout_width="match_parent"
         android:layout_height="250dp"
+        android:contentDescription="@string/restaurant_detail_picture"
+        android:scaleType="centerCrop"
+        android:src="@drawable/restaurant_picture_default"
         app:layout_constraintBottom_toTopOf="@id/activity_restaurant_detail_frame_2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:scaleType="centerCrop"
-        android:contentDescription="@string/restaurant_detail_picture"
-        android:src="@drawable/restaurant_picture_default"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/activity_restaurant_detail_valid_button"
@@ -39,19 +39,20 @@
 
     <TextView
         android:id="@+id/activity_restaurant_detail_name"
+        style="@style/TextAppearance.Material3.TitleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:text="@string/restaurant_detail_restaurant_name"
         android:textColor="@color/text_menu"
-        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="@id/activity_restaurant_detail_frame_2" />
 
     <TextView
         android:id="@+id/activity_restaurant_detail_text"
+        style="@style/TextAppearance.Material3.BodyMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
@@ -131,8 +132,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:textColor="@color/primary_color"
         android:text="@string/restaurant_detail_call"
+        android:textColor="@color/primary_color"
         app:layout_constraintLeft_toLeftOf="@id/detail_restaurant_call_icon"
         app:layout_constraintRight_toRightOf="@id/detail_restaurant_call_icon"
         app:layout_constraintTop_toBottomOf="@id/detail_restaurant_call_icon" />
@@ -142,8 +143,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:textColor="@color/primary_color"
         android:text="@string/restaurant_detail_like"
+        android:textColor="@color/primary_color"
         app:layout_constraintEnd_toEndOf="@id/detail_restaurant_like_icon"
         app:layout_constraintStart_toStartOf="@id/detail_restaurant_like_icon"
         app:layout_constraintTop_toBottomOf="@id/detail_restaurant_like_icon" />
@@ -153,8 +154,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:textColor="@color/primary_color"
         android:text="@string/restaurant_detail_website"
+        android:textColor="@color/primary_color"
         app:layout_constraintEnd_toEndOf="@+id/detail_restaurant_website_icon"
         app:layout_constraintStart_toStartOf="@+id/detail_restaurant_website_icon"
         app:layout_constraintTop_toBottomOf="@+id/detail_restaurant_website_icon" />

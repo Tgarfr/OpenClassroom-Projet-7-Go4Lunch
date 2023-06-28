@@ -82,7 +82,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
         String restaurantType;
         if (restaurant.getType() == null) {
-            restaurantType = "Type not provided";
+            restaurantType = getResources().getString(R.string.restaurant_detail_type_not_provided);
         } else {
             restaurantType = setCapitalFistChar(restaurant.getType());
         }
